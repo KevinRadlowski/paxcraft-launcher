@@ -1,0 +1,70 @@
+{
+  "schema": "pax-baseline-coverage-v1",
+  "project": "launcher",
+  "generatedAtUtc": "2026-09-30T19:50:18.426217+00:00",
+  "sourceFileCount": 596,
+  "sourceTotalBytes": 5551561,
+  "artefactFileCount": 24,
+  "byCategory": [
+    {
+      "category": "build-assets",
+      "count": 3,
+      "bytes": 390326
+    },
+    {
+      "category": "config",
+      "count": 9,
+      "bytes": 9328
+    },
+    {
+      "category": "docs",
+      "count": 58,
+      "bytes": 236863
+    },
+    {
+      "category": "fixtures",
+      "count": 7,
+      "bytes": 49690
+    },
+    {
+      "category": "manifest-lock",
+      "count": 4,
+      "bytes": 274644
+    },
+    {
+      "category": "pax-baseline-meta",
+      "count": 3,
+      "bytes": 7195
+    },
+    {
+      "category": "scripts",
+      "count": 19,
+      "bytes": 70445
+    },
+    {
+      "category": "source-desktop",
+      "count": 62,
+      "bytes": 339498
+    },
+    {
+      "category": "source-engine",
+      "count": 216,
+      "bytes": 948563
+    },
+    {
+      "category": "source-ui",
+      "count": 129,
+      "bytes": 2494933
+    },
+    {
+      "category": "tests",
+      "count": 86,
+      "bytes": 730076
+    }
+  ],
+  "excludedCounts": {
+    "other-excluded": 7,
+    "release": 98
+  },
+  "sensitiveCount": 0
+}

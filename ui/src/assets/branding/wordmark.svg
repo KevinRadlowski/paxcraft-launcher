@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 40" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="sc-word" x1="0" y1="0" x2="220" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c084fc"/>
+      <stop offset="1" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+  <text x="0" y="30" fill="url(#sc-word)" font-family="system-ui, sans-serif" font-size="28" font-weight="700" letter-spacing="-0.02em">SweetCraft</text>
+</svg>

@@ -1,0 +1,38 @@
+{
+    "schema":  "pax-baseline-rc18-artefacts-v1",
+    "expectedSize":  85858329,
+    "expectedSha256":  "080047ecdeb80a9c0a83b768e9c8f1a44f38696929f4ecf9b6717d0bd155524d",
+    "verifiedAtUtc":  "2026-09-30T19:45:32.5893044Z",
+    "note":  "Correspondance binaire par hash seulement; provenance des sources locales UNKNOWN; aucun EXE lancé/copié/renommé.",
+    "candidates":  [
+                       {
+                           "path":  "H:\\Users\\kevin\\Downloads\\Dev\\Pax Horizon\\Minecraft\\LAUNCHER\\PaxCraft-Launcher\\release\\_pack12j-verify\\SweetCraft.Launcher-0.6.0-rc.18-win-x64-setup.exe",
+                           "exists":  true,
+                           "size":  85858329,
+                           "sha256":  "080047ecdeb80a9c0a83b768e9c8f1a44f38696929f4ecf9b6717d0bd155524d",
+                           "matchesCanonical":  true
+                       },
+                       {
+                           "path":  "H:\\Users\\kevin\\Downloads\\Dev\\Pax Horizon\\Minecraft\\LAUNCHER\\PaxCraft-Launcher\\release\\_pack12i-draft\\SweetCraft.Launcher-0.6.0-rc.18-win-x64-setup.exe",
+                           "exists":  true,
+                           "size":  85858329,
+                           "sha256":  "080047ecdeb80a9c0a83b768e9c8f1a44f38696929f4ecf9b6717d0bd155524d",
+                           "matchesCanonical":  true
+                       },
+                       {
+                           "path":  "H:\\Users\\kevin\\Downloads\\Dev\\Pax Horizon\\Minecraft\\LAUNCHER\\PaxCraft-Launcher\\release\\_pack12g-dispatch\\sweetcraft-launcher-player-qualify-unsigned\\SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe",
+                           "exists":  true,
+                           "size":  85858329,
+                           "sha256":  "17805095125902b2e9d48a0c4c5ce5fd986dd873ee0088c00d6410e6f7dddd27",
+                           "matchesCanonical":  false
+                       },
+                       {
+                           "path":  "H:\\Users\\kevin\\Downloads\\Dev\\Pax Horizon\\Minecraft\\LAUNCHER\\PaxCraft-Launcher\\release\\SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe",
+                           "exists":  true,
+                           "size":  85858584,
+                           "sha256":  "b25e45764962596fd19e68f09c9626cdebd6e70db56929228fe2573c11dcb897",
+                           "matchesCanonical":  false,
+                           "note":  "top-level-non-candidate"
+                       }
+                   ]
+}

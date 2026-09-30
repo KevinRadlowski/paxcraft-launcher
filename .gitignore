@@ -1,0 +1,116 @@
+# === Dependencies ===
+node_modules/
+.pnpm-store/
+.npm/
+**/.pnpm-debug.log*
+
+# === TypeScript / Node build outputs ===
+dist/
+dist-desktop/
+out/
+coverage/
+*.tsbuildinfo
+
+# electron-builder buildResources — keep branding assets tracked
+build/*
+!build/icon-source.svg
+!build/icon.ico
+!build/icon.png
+
+# Accidental tsc emit beside sources (authoritative sources are *.ts; emit goes to dist/)
+src/**/*.js
+src/**/*.js.map
+
+# === Angular renderer ===
+ui/dist/
+ui/out-tsc/
+ui/.angular/
+ui/coverage/
+
+# === Electron packaging / installers (repo-root only — not src/core/release/) ===
+/release/
+/releases/
+/artifacts/
+*.exe
+*.msi
+*.dmg
+*.AppImage
+*.snap
+*.deb
+*.rpm
+*.blockmap
+*.nsis.7z
+builder-debug.yml
+builder-effective-config.yaml
+# electron-builder may emit cache under this name
+.electron-builder-cache/
+
+# === Archives / local dumps ===
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+dist.zip
+
+# === Logs / temp / caches ===
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.turbo/
+.parcel-cache/
+.eslintcache
+
+# === Environment & secrets (never commit) ===
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.p7b
+!config/trusted-keys.json
+**/id_rsa
+**/id_ed25519
+**/*-credentials.json
+**/*-credentials.*.json
+**/*tokens*.json
+**/*refresh*.bin
+
+# Code-signing / private trust material
+**/code-signing/
+**/signing/private/
+**/*-private-key*
+**/*.codesign*
+# Local Microsoft / Minecraft / launcher runtime dumps
+**/userData/
+**/dev-fake-auth/
+**/dev-fake-install/
+**/dev-fake-play/
+
+# === IDE / OS ===
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# === Test / smoke local artifacts ===
+electron-smoke.*.log
+playwright-report/
+test-results/
+# Explicit (also matched by tmp/)
+tests/tmp/

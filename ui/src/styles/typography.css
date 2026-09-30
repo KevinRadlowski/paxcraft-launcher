@@ -1,0 +1,116 @@
+:root {
+  --sc-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --sc-font-display: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /*
+   * SCRIPT_FONT_ASSET_REQUIRED
+   * Deferred to global 0.6F polish. Future local WOFF2 must:
+   * - support French accents
+   * - open/commercially distributable license
+   * - premium handwritten editorial lettering (not childish, not generic italic)
+   * - never load remotely
+   * Apply only to decorative phrases (.sc-script), never body/UI.
+   */
+  --sc-font-display-script:
+    'SweetCraft Script', 'Segoe Script', 'Lucida Handwriting', 'Apple Chancery', cursive,
+    var(--sc-font-sans);
+  --sc-font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
+
+  --sc-text-xs: 0.75rem;
+  --sc-text-sm: 0.8125rem;
+  --sc-text-base: 0.9375rem;
+  --sc-text-lg: 1.125rem;
+  --sc-text-xl: 1.375rem;
+  --sc-text-2xl: 1.75rem;
+  --sc-text-3xl: 2.25rem;
+  --sc-text-4xl: 2.75rem;
+  --sc-text-5xl: 3.25rem;
+
+  --sc-leading-tight: 1.15;
+  --sc-leading-normal: 1.5;
+  --sc-leading-relaxed: 1.65;
+
+  --sc-weight-normal: 400;
+  --sc-weight-medium: 500;
+  --sc-weight-semibold: 600;
+  --sc-weight-bold: 700;
+}
+
+/*
+ * When the licensed WOFF2 is dropped in:
+ * @font-face {
+ *   font-family: 'SweetCraft Script';
+ *   src: url('../assets/fonts/sweetcraft-script.woff2') format('woff2');
+ *   font-display: swap;
+ *   unicode-range: U+0000-00FF, U+0100-024F;
+ * }
+ */
+
+body {
+  font-family: var(--sc-font-sans);
+  font-size: var(--sc-text-base);
+  line-height: var(--sc-leading-normal);
+  font-weight: var(--sc-weight-normal);
+  color: var(--sc-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: var(--sc-weight-semibold);
+  line-height: var(--sc-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: var(--sc-text-3xl);
+}
+
+h2 {
+  font-size: var(--sc-text-2xl);
+}
+
+h3 {
+  font-size: var(--sc-text-xl);
+}
+
+h4 {
+  font-size: var(--sc-text-lg);
+}
+
+p {
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--sc-font-mono);
+  font-size: var(--sc-text-sm);
+}
+
+.text-secondary {
+  color: var(--sc-text-secondary);
+}
+
+.text-muted {
+  color: var(--sc-text-muted);
+}
+
+.text-accent {
+  color: var(--sc-text-accent);
+}
+
+.sc-display {
+  font-family: var(--sc-font-display);
+  font-weight: var(--sc-weight-bold);
+  letter-spacing: -0.03em;
+}
+
+.sc-script {
+  font-family: var(--sc-font-display-script);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}

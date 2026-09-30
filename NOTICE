@@ -1,0 +1,54 @@
+# NOTICE — Proprietary software
+
+**SweetCraft Launcher**
+
+Copyright (c) Maidenhead. All rights reserved.
+
+## Official use vs source reuse
+
+Installing and running the **officially distributed** SweetCraft Launcher binaries
+(for example the Windows setup published on this project's GitHub Releases, when
+available to you) is permitted for playing SweetCraft as provided by the project.
+
+That authorized use of the official installer/application is **separate** from any
+right to reuse the **source code** in this repository.
+
+## Source visibility vs license grant
+
+If this GitHub repository is made **public**, the source code may be **readable**
+by anyone.
+
+Visibility of the source does **not** grant a license to:
+
+- copy the software source;
+- modify it;
+- redistribute it;
+- create derivative works;
+- reuse it in other projects;
+- or sublicense any of the above.
+
+Unless a separate written license is later published by the rights holder,
+**all rights are reserved**.
+
+This project is **not** released under MIT, GPL, Apache, Creative Commons, or any
+other open-source or creative-commons license. There is **no** `LICENSE` file
+granting general reuse of the source.
+
+## Third-party software and content
+
+This notice applies only to SweetCraft Launcher materials under the copyright
+display name above.
+
+It does **not** claim ownership of, or re-license:
+
+- npm / Node dependencies (see package manifests and each package's upstream license);
+- Minecraft, Microsoft, and Mojang trademarks and software (subject to Microsoft / Mojang terms);
+- Fabric Loader and related tooling (subject to their upstream licenses);
+- third-party Minecraft mods, resource packs, and assets from Modrinth, CurseForge,
+  or authors (subject to each author's license and distribution terms).
+
+Those third-party licenses and ownership terms continue to apply in full.
+
+## Contact
+
+Copyright / licensing questions: repository owner on GitHub (`KevinRadlowski`).

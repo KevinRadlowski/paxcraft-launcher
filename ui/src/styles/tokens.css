@@ -1,0 +1,112 @@
+:root {
+  /* App background */
+  --sc-bg-app: #07070d;
+  --sc-bg-base: #0b0b12;
+  --sc-bg-elevated: #12121c;
+  --sc-bg-sidebar: #0e0e18;
+  --sc-bg-overlay: rgba(7, 7, 13, 0.82);
+
+  /* Surfaces */
+  --sc-bg-surface: #161622;
+  --sc-bg-surface-elevated: #1c1c2a;
+  --sc-surface-1: #161622;
+  --sc-surface-2: #1c1c2a;
+  --sc-surface-3: #242436;
+  --sc-surface-hover: #2a2a3e;
+  --sc-surface-active: #32324a;
+  --sc-surface-glass: rgba(18, 18, 28, 0.72);
+
+  /* Borders */
+  --sc-border-subtle: rgba(196, 181, 253, 0.1);
+  --sc-border-default: rgba(196, 181, 253, 0.16);
+  --sc-border-strong: rgba(196, 181, 253, 0.26);
+  --sc-border-accent: rgba(217, 27, 181, 0.55);
+
+  /* Text */
+  --sc-text-primary: #f3f0f8;
+  --sc-text-secondary: #b0a8c0;
+  --sc-text-muted: #7a738c;
+  --sc-text-inverse: #0b0b12;
+  --sc-text-accent: #f0abfc;
+  --sc-text-danger: #fca5a5;
+
+  /* Accent */
+  --sc-accent-50: #faf5ff;
+  --sc-accent-100: #f3e8ff;
+  --sc-accent-200: #e9d5ff;
+  --sc-accent-300: #d8b4fe;
+  --sc-accent-400: #c084fc;
+  --sc-accent-500: #a855f7;
+  --sc-accent-600: #9333ea;
+  --sc-accent-700: #7e22ce;
+  --sc-accent-purple: #8a1bd9;
+  --sc-accent-magenta: #d91bb5;
+  --sc-accent-soft: rgba(168, 85, 247, 0.16);
+  --sc-accent-glow: rgba(217, 27, 181, 0.32);
+  --sc-accent-gradient: linear-gradient(135deg, #8a1bd9 0%, #d91bb5 100%);
+  --sc-nav-active-gradient: linear-gradient(90deg, rgba(138, 27, 217, 0.62) 0%, rgba(217, 27, 181, 0.38) 100%);
+
+  /* Semantic */
+  --sc-success: #2ecc71;
+  --sc-success-muted: rgba(46, 204, 113, 0.14);
+  --sc-warning: #f59e0b;
+  --sc-warning-muted: rgba(245, 158, 11, 0.15);
+  --sc-danger: #ef4444;
+  --sc-danger-muted: rgba(239, 68, 68, 0.15);
+  --sc-info: #38bdf8;
+  --sc-info-muted: rgba(56, 189, 248, 0.15);
+
+  /* Spacing */
+  --sc-space-1: 0.25rem;
+  --sc-space-2: 0.5rem;
+  --sc-space-3: 0.75rem;
+  --sc-space-4: 1rem;
+  --sc-space-5: 1.25rem;
+  --sc-space-6: 1.5rem;
+  --sc-space-8: 2rem;
+  --sc-space-10: 2.5rem;
+  --sc-space-12: 3rem;
+
+  /* Radius */
+  --sc-radius-sm: 0.375rem;
+  --sc-radius-md: 0.625rem;
+  --sc-radius-lg: 0.875rem;
+  --sc-radius-xl: 1.125rem;
+  --sc-radius-full: 9999px;
+
+  /* Shadow */
+  --sc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --sc-shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
+  --sc-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --sc-shadow-card: 0 10px 32px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --sc-shadow-accent: 0 0 32px var(--sc-accent-glow);
+  --sc-shadow-glow: 0 0 28px var(--sc-accent-glow);
+
+  /* Motion */
+  --sc-duration-fast: 120ms;
+  --sc-duration-normal: 200ms;
+  --sc-duration-slow: 280ms;
+  --sc-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sc-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layout — desktop launcher fills viewport */
+  --sc-titlebar-height: 2.5rem;
+  --sc-sidebar-width: 12.75rem;
+  --sc-statusbar-height: 2rem;
+  --sc-content-max-width: none;
+  --sc-home-gap: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sc-duration-fast: 0ms;
+    --sc-duration-normal: 0ms;
+    --sc-duration-slow: 0ms;
+  }
+}
+
+html.sc-reduced-motion {
+  --sc-duration-fast: 0ms;
+  --sc-duration-normal: 0ms;
+  --sc-duration-slow: 0ms;
+}

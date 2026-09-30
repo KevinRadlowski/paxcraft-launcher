@@ -1,0 +1,22 @@
+# Dependencies
+/node_modules
+
+# Build / Angular
+/dist
+/out-tsc
+/.angular
+/coverage
+
+# Logs / caches
+*.log
+.cache/
+
+# Local env (renderer)
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+/.idea
+.DS_Store
+Thumbs.db

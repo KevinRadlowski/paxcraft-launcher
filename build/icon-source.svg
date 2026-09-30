@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" aria-hidden="true">
+  <!-- SweetCraft Launcher Windows icon - derived from ui/src/assets/branding/logo.svg -->
+  <defs>
+    <linearGradient id="sc-mark" x1="42" y1="21" x2="214" y2="235" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#sc-mark)"/>
+  <path
+    d="M74 170V86l54 43 54-43v84"
+    stroke="#ffffff"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

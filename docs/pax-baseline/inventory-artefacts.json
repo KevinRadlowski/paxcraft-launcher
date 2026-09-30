@@ -1,0 +1,155 @@
+{
+  "schema": "pax-baseline-inventory-v1",
+  "kind": "historical-artefacts",
+  "project": "launcher",
+  "root": "H:\\Users\\kevin\\Downloads\\Dev\\Pax Horizon\\Minecraft\\LAUNCHER\\PaxCraft-Launcher",
+  "generatedAtUtc": "2026-09-30T19:50:18.426217+00:00",
+  "fileCount": 24,
+  "note": "Artefacts historiques inventoriés séparément; non supprimés; ne constituent pas une preuve de provenance Git Pax.",
+  "files": [
+    {
+      "path": "docs/PLAYER_INSTALL.zip",
+      "size": 45504,
+      "sha256": "cbb66b7ba1e1794453ba7ea8b24e69f2162be804198224d5b293d81ba574985d",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "electron-smoke.err.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "electron-smoke.out.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/SweetCraft Launcher-0.6.0-rc.17-win-x64-setup.exe",
+      "size": 86554880,
+      "sha256": "5ddeeec8ea692af92d77c79520c8ba8bee50cb684804236e9d4d87fc6d315394",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/SweetCraft Launcher-0.6.0-rc.17-win-x64-setup.exe.blockmap",
+      "size": 91048,
+      "sha256": "3a88e027f7aacba3dca7b09f98647f32aa4e8be57ff025bfa188bffb2399be88",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/SweetCraft Launcher-0.6.0-rc.17-win-x64-setup.zip",
+      "size": 295030318,
+      "sha256": "7bd27290e229c98d87adf4e703477c5b46c703af3b9684e0647341a24d13923a",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe",
+      "size": 85858584,
+      "sha256": "b25e45764962596fd19e68f09c9626cdebd6e70db56929228fe2573c11dcb897",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_g62e-asar-extract/package.json",
+      "size": 391,
+      "sha256": "85816c3db5bb854c88fe0f99661a39125d01e30665fd85629f8aefb05ee6bff8",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12d1-asar/package.json",
+      "size": 443,
+      "sha256": "af4c8924a73d8e4fc73ca0d0a6cfa61a00ea20d82d9c34c02f8eb04731e08255",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12g-ci/sweetcraft-launcher-main-unsigned/SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe",
+      "size": 85858584,
+      "sha256": "b25e45764962596fd19e68f09c9626cdebd6e70db56929228fe2573c11dcb897",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12g-ci/sweetcraft-launcher-main-unsigned/player-release-manifest-win-x64.json",
+      "size": 589,
+      "sha256": "2899aeef9c887d0202b18e40f3e0b64a6f4c6a8125b2205d9b5b1911f5fa7a47",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12g-dispatch/sweetcraft-launcher-player-qualify-unsigned/SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe",
+      "size": 85858329,
+      "sha256": "17805095125902b2e9d48a0c4c5ce5fd986dd873ee0088c00d6410e6f7dddd27",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12g-dispatch/sweetcraft-launcher-player-qualify-unsigned/player-release-manifest-win-x64.json",
+      "size": 589,
+      "sha256": "c8c64f76fd04ece7b4120ec795c5729d51a6cd2779758a5a130037df43806064",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12i-draft/SweetCraft.Launcher-0.6.0-rc.18-win-x64-setup.exe",
+      "size": 85858329,
+      "sha256": "080047ecdeb80a9c0a83b768e9c8f1a44f38696929f4ecf9b6717d0bd155524d",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12i-draft/player-release-manifest-win-x64.json",
+      "size": 589,
+      "sha256": "dc6c9a04401eb1f5513725b4088a238a0d5f80e4501242b44efbf04a791b17a6",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12j-verify/SweetCraft.Launcher-0.6.0-rc.18-win-x64-setup.exe",
+      "size": 85858329,
+      "sha256": "080047ecdeb80a9c0a83b768e9c8f1a44f38696929f4ecf9b6717d0bd155524d",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/_pack12j-verify/player-release-manifest-win-x64.json",
+      "size": 589,
+      "sha256": "dc6c9a04401eb1f5513725b4088a238a0d5f80e4501242b44efbf04a791b17a6",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/builder-debug.yml",
+      "size": 8101,
+      "sha256": "6265e04a79b90315e713909d09d26dc6378c9c974d58b148f6d0722c84018124",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/player-release-manifest-win-x64.json",
+      "size": 589,
+      "sha256": "2899aeef9c887d0202b18e40f3e0b64a6f4c6a8125b2205d9b5b1911f5fa7a47",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/win-unpacked/SweetCraft Launcher.exe",
+      "size": 201569280,
+      "sha256": "6b804582f77b1fed1a79728d1b9fc63720cead0eaa9a467aa9f41f4561d2a1e1",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/win-unpacked/resources/config/trusted-keys.json",
+      "size": 310,
+      "sha256": "9a210ac592a6c3110fcb376ac8d3e39420a3e552f4d662d99001923abec36487",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/win-unpacked/resources/elevate.exe",
+      "size": 107520,
+      "sha256": "9b1fbf0c11c520ae714af8aa9af12cfd48503eedecd7398d8992ee94d1b4dc37",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "release/win-unpacked/vk_swiftshader_icd.json",
+      "size": 106,
+      "sha256": "32d83ff113fef532a9f97e0d2831f8656628ab1c99e9060f0332b1532839afd9",
+      "category": "historical-artefact"
+    },
+    {
+      "path": "ui/src.zip",
+      "size": 7615674,
+      "sha256": "21b4c09e51bc867a87b8594ec72309b8626807a8c234a2a2694e1c8e4699ff7e",
+      "category": "historical-artefact"
+    }
+  ]
+}

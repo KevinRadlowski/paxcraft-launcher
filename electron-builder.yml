@@ -1,0 +1,66 @@
+# SweetCraft Launcher — electron-builder
+# PACK-01 foundation + PACK-02 extraResources + PACK-04 Windows identity.
+# buildVersion is synced by pnpm version:generate (Windows PE numeric mapping).
+
+buildVersion: 0.6.0.18
+
+appId: fr.xbase.sweetcraft.launcher
+productName: SweetCraft Launcher
+executableName: SweetCraft Launcher
+copyright: Copyright © SweetCraft / XBase
+
+# Uses root package.json "description".
+# PE CompanyName comes from package.json author.name (PACK-12C product branding:
+# "SweetCraft / XBASE"). This is NOT Authenticode / verified-publisher identity.
+# PE FileVersion/ProductVersion: package.json shortVersion + shortVersionWindows
+# (synced by version:generate) plus buildVersion above.
+
+directories:
+  output: release
+  buildResources: build
+
+# In-app runtime (asar). Trusted keys ship via extraResources (PACK-02).
+files:
+  - package.json
+  - dist-desktop/**/*
+  - dist/**/*
+  - ui/dist/sweetcraft-launcher-ui/**/*
+  - "!**/*.map"
+  - "!**/tsconfig*.json"
+  - "!**/*.ts"
+  - "!**/node_modules/**/{CHANGELOG,README,readme,LICENSE,LICENCE,*.md}"
+
+# PUBLIC verification keyring — process.resourcesPath/config/trusted-keys.json
+extraResources:
+  - from: config/trusted-keys.json
+    to: config/trusted-keys.json
+
+asar: true
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: ${productName}-${version}-win-${arch}.${ext}
+  # File description / ProductName come from productName + package.json description.
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SweetCraft Launcher
+  uninstallDisplayName: SweetCraft Launcher
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  deleteAppDataOnUninstall: false
+  artifactName: ${productName}-${version}-win-${arch}-setup.${ext}
+
+publish: null
+# CLI packaging always passes `--publish never` (package.json desktop:package:builder).
+# Config null alone is insufficient on electron-builder 26+ (CI may still log implicit publish).

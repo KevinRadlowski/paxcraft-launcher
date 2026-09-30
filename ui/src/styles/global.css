@@ -1,0 +1,89 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--sc-bg-app);
+}
+
+body {
+  background:
+    radial-gradient(ellipse 70% 45% at 12% -8%, rgba(138, 27, 217, 0.16), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 92% 108%, rgba(217, 27, 181, 0.1), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 70% 20%, rgba(88, 28, 135, 0.12), transparent 60%),
+    var(--sc-bg-app);
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--sc-accent-400);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--sc-text-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html.sc-reduced-motion *,
+html.sc-reduced-motion *::before,
+html.sc-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.sc-reduced-motion .sc-parallax,
+html.sc-reduced-motion .sc-hero-media {
+  transform: none !important;
+  animation: none !important;
+}

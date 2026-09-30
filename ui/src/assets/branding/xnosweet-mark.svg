@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 28" fill="none" aria-hidden="true">
+  <!-- OPTIONAL SLOT  replace with official XNOSWEET mark when provided. Text-only temporary. -->
+  <text
+    x="0"
+    y="20"
+    fill="#c4b5fd"
+    font-family="system-ui, Segoe UI, sans-serif"
+    font-size="16"
+    font-weight="700"
+    letter-spacing="0.14em"
+  >XNOSWEET</text>
+</svg>
