@@ -20,6 +20,21 @@ const CODE_MAP: Record<string, { code: string; messageKey: string; retryable: bo
     messageKey: "error.install.network",
     retryable: true
   },
+  NETWORK_NOT_CONFIGURED: {
+    code: "NETWORK_NOT_CONFIGURED",
+    messageKey: "error.install.network",
+    retryable: false
+  },
+  DISTRIBUTION_NOT_CONFIGURED: {
+    code: "DISTRIBUTION_NOT_CONFIGURED",
+    messageKey: "error.install.network",
+    retryable: false
+  },
+  HISTORICAL_DESTINATION_BLOCKED: {
+    code: "HISTORICAL_DESTINATION_BLOCKED",
+    messageKey: "error.install.network",
+    retryable: false
+  },
   HTTP_ERROR: { code: "NETWORK_ERROR", messageKey: "error.install.network", retryable: true },
   HTTP_TIMEOUT: { code: "NETWORK_ERROR", messageKey: "error.install.network", retryable: true },
   DOWNLOAD_FAILED: {

@@ -1,6 +1,10 @@
 /**
- * PACK-12G.1 — player-release qualification must build before full tests
+ * PACK-12G.1 / PACK-PAX-03.1 — validation workflows must build before full tests
  * (dist/** required on a clean runner). Do not silently restore test-before-build.
+ *
+ * Pax policy (PACK-PAX-03.1): CI validates without NSIS packaging / GitHub Release.
+ * Product still forces `desktop:package:builder --publish never` and `publish: null`
+ * for when packaging returns in a later lot.
  */
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -35,6 +39,12 @@ function assertBuildBeforeFullTest(workflowLabel: string, yamlText: string): voi
   );
 }
 
+function assertValidationOnlyPermissions(workflowLabel: string, yamlText: string): void {
+  assert.match(yamlText, /permissions:\s*\r?\n\s*contents:\s*read/, `${workflowLabel}: contents: read`);
+  assert.doesNotMatch(yamlText, /contents:\s*write/, `${workflowLabel}: must not request contents: write`);
+  assert.doesNotMatch(yamlText, /id-token:\s*write/, `${workflowLabel}: no id-token write`);
+}
+
 describe("PACK-12G.1 player-release / CI workflow order", () => {
   it("player-release builds before full tests", () => {
     const yaml = fs.readFileSync(PLAYER_RELEASE, "utf8");
@@ -46,17 +56,18 @@ describe("PACK-12G.1 player-release / CI workflow order", () => {
     assertBuildBeforeFullTest("ci-pr.yml", fs.readFileSync(CI_PR, "utf8"));
   });
 
-  it("player-release retains draft-only tag path and dispatch-without-release", () => {
+  it("player-release is dispatch-only prep without auto-release publication", () => {
     const yaml = fs.readFileSync(PLAYER_RELEASE, "utf8");
-    assert.match(yaml, /draft:\s*true/);
-    assert.match(yaml, /make_latest:\s*false/);
-    assert.match(yaml, /if:\s*github\.ref_type\s*==\s*'tag'/);
-    assert.match(yaml, /if:\s*github\.ref_type\s*!=\s*'tag'/);
+    assert.match(yaml, /workflow_dispatch/);
     assert.match(yaml, /environment:\s*player-release/);
-    assert.doesNotMatch(yaml, /draft:\s*false/);
+    assert.doesNotMatch(yaml, /softprops\/action-gh-release/);
+    assert.doesNotMatch(yaml, /draft:\s*true/);
+    assert.doesNotMatch(yaml, /make_latest:\s*true/);
+    assert.doesNotMatch(yaml, /push:\s*\r?\n\s*tags:/);
+    assertValidationOnlyPermissions("player-release.yml", yaml);
   });
 
-  it("PACK-12G: CI packaging paths force electron-builder --publish never", () => {
+  it("PACK-12G / PAX-03.1: product publish-never preserved; CI defers packaging", () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")) as {
       scripts: Record<string, string>;
     };
@@ -65,26 +76,24 @@ describe("PACK-12G.1 player-release / CI workflow order", () => {
     assert.match(builder, /--publish\s+never/);
     assert.doesNotMatch(builder, /--publish\s+(always|onTag|onTagOrDraft)/);
 
-    // Workflows must go through pnpm desktop:package (inherits --publish never).
+    const yml = fs.readFileSync(path.join(ROOT, "electron-builder.yml"), "utf8");
+    assert.match(yml, /^publish:\s*null\s*$/m);
+
+    // Provisional Pax CI: no workflow may run packaging/publish until a dedicated lot.
     for (const [label, file] of [
       ["player-release.yml", PLAYER_RELEASE],
       ["ci-main.yml", CI_MAIN],
       ["ci-pr.yml", CI_PR]
     ] as const) {
       const yaml = fs.readFileSync(file, "utf8");
-      if (label === "ci-pr.yml") {
-        // PR gate builds/tests only — no package step required.
-        continue;
-      }
-      assert.match(yaml, /pnpm desktop:package\b/, `${label} must call desktop:package`);
+      assertValidationOnlyPermissions(label, yaml);
+      assert.doesNotMatch(yaml, /pnpm desktop:package\b/, `${label}: packaging deferred`);
+      assert.doesNotMatch(yaml, /softprops\/action-gh-release/, `${label}: no GitHub Release`);
       assert.doesNotMatch(
         yaml,
-        /electron-builder(?![^\n]*--publish never)/,
-        `${label} must not invoke electron-builder directly without publish never`
+        /electron-builder/,
+        `${label}: must not invoke electron-builder directly`
       );
     }
-
-    const yml = fs.readFileSync(path.join(ROOT, "electron-builder.yml"), "utf8");
-    assert.match(yml, /^publish:\s*null\s*$/m);
   });
 });

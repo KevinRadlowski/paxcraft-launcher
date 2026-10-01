@@ -1,35 +1,31 @@
 /**
- * Home visual asset slots — each region has a distinct path.
- * Final artworks are supplied externally (see assets/<slot>/README.md).
- * Until webp packs land, CSS placeholders remain visible behind optional images.
+ * Home visual asset slots — Pax Horizon (PACK-PAX-07).
+ * SweetCraft originals under assets/branding|hero|cards remain untouched.
  */
 
 export const HOME_ASSETS = {
-  /** Production hero WebP (converted from validated PNG composition). */
-  hero: 'assets/hero/sweetcraft-home-hero.webp',
-  heroTargetWebp: 'assets/hero/sweetcraft-home-hero.webp',
-  serverCard: 'assets/cards/sweetcraft-server-card.webp',
-  communityCard: 'assets/cards/sweetcraft-community-card.webp',
-  packArt: 'assets/cards/sweetcraft-pack-art.webp',
-  installArt: 'assets/cards/sweetcraft-install-art.webp',
-  ambientRight: 'assets/ambient/sweetcraft-home-ambient-right.webp',
+  hero: 'assets/pax/background-accueil.jpg',
+  heroTargetWebp: 'assets/pax/background-accueil.jpg',
+  serverCard: 'assets/pax/background-accueil.jpg',
+  communityCard: 'assets/pax/background-accueil.jpg',
+  packArt: 'assets/pax/logo-pax.webp',
+  installArt: 'assets/pax/logo-pax.webp',
+  ambientRight: 'assets/pax/background-accueil.jpg',
   xnosweetMark: 'assets/branding/xnosweet-mark.svg',
   sweetcraftMark: 'assets/branding/logo.svg',
+  paxLogo: 'assets/pax/logo-pax.webp',
+  paxLogoPng: 'assets/pax/logo-pax.png',
 } as const;
 
 export type HomeAssetKey = keyof typeof HOME_ASSETS;
 
-/** Structural uniqueness — no two conceptual slots share the same URL. */
+/** Structural uniqueness for primary layout slots (hero vs marks may share). */
 export function assertHomeAssetsUnique(
   assets: Record<string, string> = HOME_ASSETS as unknown as Record<string, string>,
 ): void {
   const conceptual = [
     assets['hero'] ?? assets['heroTargetWebp'],
-    assets['serverCard'],
-    assets['communityCard'],
-    assets['packArt'],
-    assets['installArt'],
-    assets['ambientRight'],
+    assets['paxLogo'] ?? assets['sweetcraftMark'],
   ].filter(Boolean);
   const set = new Set(conceptual);
   if (set.size !== conceptual.length) {

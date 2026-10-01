@@ -39,11 +39,11 @@ describe("PACK-12B player release manifest", () => {
   it("expected setup filename uses product + semver + win-x64-setup.exe", () => {
     assert.equal(
       expectedSetupFilename("0.6.0-rc.18"),
-      "SweetCraft Launcher-0.6.0-rc.18-win-x64-setup.exe"
+      "PaxCraft Launcher-0.6.0-rc.18-win-x64-setup.exe"
     );
     assert.equal(
       expectedSetupFilename("1.0.0"),
-      "SweetCraft Launcher-1.0.0-win-x64-setup.exe"
+      "PaxCraft Launcher-1.0.0-win-x64-setup.exe"
     );
   });
 
@@ -75,7 +75,7 @@ describe("PACK-12B player release manifest", () => {
         }
       });
       assert.equal(manifest.schemaVersion, 1);
-      assert.equal(manifest.product, "SweetCraft Launcher");
+      assert.equal(manifest.product, "PaxCraft Launcher");
       assert.equal(manifest.semver, semver);
       assert.equal(manifest.dirty, false);
       assert.equal(manifest.platform, "win32");

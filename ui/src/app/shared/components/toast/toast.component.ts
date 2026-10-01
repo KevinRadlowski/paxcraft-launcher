@@ -75,7 +75,7 @@ import { ScTranslatePipe } from '../../../core/i18n/translate.pipe';
       }
 
       .close:focus-visible {
-        outline: 2px solid var(--sc-accent, #a855f7);
+        outline: 2px solid var(--sc-accent-300);
         outline-offset: 2px;
       }
 

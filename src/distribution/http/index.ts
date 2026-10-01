@@ -1,4 +1,8 @@
 import { ErrorCode, LauncherError } from "../../core/errors/index.js";
+import {
+  assertRealOutboundTransportAllowed,
+  isHistoricalBlockedHost
+} from "../../product/paxNetworkConfig.js";
 
 export interface HttpRequestOptions {
   url: string;
@@ -40,7 +44,17 @@ function assertHttpsUrl(url: string): URL {
     throw new LauncherError(ErrorCode.NETWORK_ERROR, `invalid URL: ${url}`, { url });
   }
   if (parsed.protocol !== "https:") {
-    throw new LauncherError(ErrorCode.UNSAFE_REDIRECT, `only HTTPS is allowed, got ${parsed.protocol}`, { url });
+    throw new LauncherError(ErrorCode.UNSAFE_REDIRECT, `only HTTPS is allowed, got ${parsed.protocol}`, {});
+  }
+  if (parsed.username || parsed.password) {
+    throw new LauncherError(ErrorCode.UNSAFE_REDIRECT, "URL must not contain credentials", {});
+  }
+  if (isHistoricalBlockedHost(parsed.hostname)) {
+    throw new LauncherError(
+      ErrorCode.HISTORICAL_DESTINATION_BLOCKED,
+      "historical SweetCraft destination refused",
+      { hostname: parsed.hostname.toLowerCase() }
+    );
   }
   return parsed;
 }
@@ -51,6 +65,8 @@ function assertHttpsUrl(url: string): URL {
  */
 export class FetchHttpClient implements HttpClient {
   async request(options: HttpRequestOptions): Promise<HttpResponse> {
+    // Harness permits never authorize real fetch — fail closed before network I/O.
+    assertRealOutboundTransportAllowed();
     const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     const maxBytes = options.maxBytes ?? DEFAULT_METADATA_MAX_BYTES;
     let currentUrl = assertHttpsUrl(options.url).toString();
@@ -107,6 +123,19 @@ export class FetchHttpClient implements HttpClient {
               from: currentUrl,
               to: next.toString()
             });
+          }
+          if (next.username || next.password) {
+            throw new LauncherError(ErrorCode.UNSAFE_REDIRECT, "redirect must not contain credentials", {
+              from: currentUrl,
+              to: next.toString()
+            });
+          }
+          if (isHistoricalBlockedHost(next.hostname)) {
+            throw new LauncherError(
+              ErrorCode.HISTORICAL_DESTINATION_BLOCKED,
+              "redirect to historical SweetCraft destination refused",
+              { from: currentUrl, hostname: next.hostname.toLowerCase() }
+            );
           }
           currentUrl = next.toString();
           continue;

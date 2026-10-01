@@ -14,7 +14,7 @@ const FIXTURE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 export const PM_ROOT = path.resolve(FIXTURE_ROOT, "..", "SweetCraft-PackManager-v0.4");
 export const RELEASE_013 = path.join(PM_ROOT, "data", "releases", "0.1.3");
 export const RELEASE_014 = path.join(PM_ROOT, "data", "releases", "0.1.4");
-export const PRODUCT_BASE = "https://cdn.xnosweet.fr/sweetcraft";
+export const PRODUCT_BASE = "https://cdn.example.test/sweetcraft";
 
 export const CASINO_OLD_SHA = "27d7d836dfe914ba03642a46b2e5eac1c89d678bd144f1d2dd783d893d1b7727";
 export const CASINO_NEW_SHA = "750128c35b68443e5cf3e760cc29781a79229c60473681dedb91b40acf7e269c";

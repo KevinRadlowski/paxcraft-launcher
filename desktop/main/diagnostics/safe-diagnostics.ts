@@ -39,7 +39,7 @@ export interface BuildSafeDiagnosticsInput {
   readonly launcherDataRoot?: string | null;
   readonly defaultInstanceRoot?: string | null;
   readonly defaultRuntimeRoot?: string | null;
-  readonly dataRootSource?: "explicit" | "env" | "canonical" | "legacy-fallback" | null;
+  readonly dataRootSource?: "explicit" | "env" | "canonical" | null;
   readonly javaSource?: "managed" | "JAVA_HOME" | "PATH" | "known_path" | "none" | null;
   readonly javaRequiredMajor?: number | null;
   readonly javaSelectedMajor?: number | null;

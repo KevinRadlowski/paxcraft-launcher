@@ -1,6 +1,6 @@
 import { ErrorCode, LauncherError } from "../../core/errors/index.js";
 import { resolveLatestRelease, type TrustedResolvedRelease } from "../../core/resolve/index.js";
-import { DEFAULT_PRODUCT_BASE } from "../../distribution/urls/index.js";
+import { requireConfiguredDistributionOrigin } from "../../product/paxNetworkConfig.js";
 import { applyInstallation } from "../../instance/apply/index.js";
 import { reconcileMissedConfigMigrations } from "../../instance/configMigration/missedRecovery.js";
 import { applyFirstRunSeeds } from "../../instance/firstRun/seed.js";
@@ -46,9 +46,14 @@ async function resolveTrusted(
   deps: OrchestratorDependencies
 ): Promise<TrustedResolvedRelease> {
   const antiRollbackState = await deps.antiRollbackStore.load();
+  const productBase = requireConfiguredDistributionOrigin({
+    explicit: req.productBase,
+    harness: deps.networkHarness,
+    runtime: deps.networkRuntime
+  });
   return resolveLatestRelease({
     channel: req.channel,
-    productBase: req.productBase ?? DEFAULT_PRODUCT_BASE,
+    productBase,
     http: deps.http,
     trust: deps.trust,
     antiRollbackState,

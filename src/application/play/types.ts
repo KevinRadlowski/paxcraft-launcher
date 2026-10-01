@@ -126,6 +126,13 @@ export interface PlayDependencies {
   allowManagedJavaProvision?: boolean;
   /** When true, ignore JAVA_HOME / PATH (E2E isolation). */
   skipSystemJava?: boolean;
+  /**
+   * PACK-PAX-05.1 — opaque harness permit (tests only).
+   * Never set by packaged desktop / CLI.
+   */
+  networkHarness?: import("../../product/paxNetworkConfig.js").NetworkHarnessPermit;
+  /** Runtime trust context for network policy. Omission ⇒ packaged-production. */
+  networkRuntime?: import("../../product/paxNetworkConfig.js").PaxNetworkRuntimeContext;
   /** Test hooks. */
   hooks?: {
     afterGameLockReserved?: () => Promise<void>;

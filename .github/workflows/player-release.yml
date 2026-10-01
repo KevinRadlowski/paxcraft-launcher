@@ -1,0 +1,72 @@
+﻿# Pax Horizon â€” player-release.yml (PROVISIONAL path kept for contract continuity)
+# PACK-PAX-03.1: manual preparatory qualification only â€” NOT a distribution pipeline.
+# Origin: reconstructed from docs/CI.md + tests contracts; SweetCraft YAML archive absent.
+#
+# Explicitly deferred / forbidden here:
+# - NSIS package + Electron smoke
+# - GitHub Release (including draft)
+# - tag-driven release publish
+# - write permission on repository contents, deploy, CDN/VPS/SweetCraft secrets
+#
+# Future packaging/release gates will extend this file under a separate lot.
+
+name: Player Qualification (prep, no release)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: player-qual-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    name: Qualify
+    runs-on: windows-latest
+    environment: player-release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install launcher dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install UI dependencies
+        run: pnpm --dir ui install --frozen-lockfile
+
+      - name: Version check
+        run: pnpm version:check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Full test suite
+        run: pnpm test
+        env:
+          PAXCRAFT_LAUNCHER_DATA_DIR: ${{ runner.temp }}/pax-launcher-data
+
+      - name: Desktop shared build
+        run: pnpm desktop:shared:build
+
+      - name: Desktop UI build
+        run: pnpm desktop:ui:build
+
+      - name: Assert no packaging in provisional gate
+        shell: pwsh
+        run: |
+          Write-Host "PACK-PAX-03.1: desktop:package / renderer-smoke / GitHub Release intentionally NOT run."
+          Write-Host "Gates deferred to a future packaging/release lot."

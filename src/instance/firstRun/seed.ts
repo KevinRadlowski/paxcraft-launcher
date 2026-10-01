@@ -8,9 +8,7 @@ import {
   FIRST_RUN_SEED_OPTIONS,
   FIRST_RUN_SEED_SERVERS,
   OPTIONS_REL_PATH,
-  SERVERS_REL_PATH,
-  SWEETCRAFT_SERVER_ADDRESS,
-  SWEETCRAFT_SERVER_NAME
+  SERVERS_REL_PATH
 } from "./constants.js";
 import {
   basenameFromResourcePackTarget,
@@ -18,6 +16,7 @@ import {
   resourcePackFileEntry
 } from "./optionsTxt.js";
 import { encodeServersDat } from "./serversDat.js";
+import { resolveConfiguredServerAddress } from "../../product/paxNetworkConfig.js";
 
 export interface FirstRunSeedResult {
   appliedSeedIds: string[];
@@ -83,9 +82,13 @@ async function seedServersDat(paths: InstancePaths): Promise<void> {
   if (await targetExists(abs, SERVERS_REL_PATH)) {
     return;
   }
-  const created = encodeServersDat([
-    { name: SWEETCRAFT_SERVER_NAME, ip: SWEETCRAFT_SERVER_ADDRESS }
-  ]);
+  // PACK-PAX-05: no Pax server configured → empty list (never seed historical SweetCraft host).
+  const serverAddress = resolveConfiguredServerAddress();
+  const entries =
+    serverAddress !== null
+      ? [{ name: "PaxCraft", ip: serverAddress }]
+      : [];
+  const created = encodeServersDat(entries);
   await writeFileAtomic(abs, created);
 }
 

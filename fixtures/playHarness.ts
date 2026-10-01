@@ -22,7 +22,8 @@ import {
   ORCH_BASE,
   buildOrchArtefacts,
   mountOrchBundle,
-  createOrchDeps
+  createOrchDeps,
+  testNetworkPolicy
 } from "./orchestratorHarness.js";
 import {
   FAKE_MS_REFRESH,
@@ -38,7 +39,7 @@ import { buildMinimalFixtures, mockRuntimeSources } from "./minecraft/fixtures.j
 import { windowsX64Platform } from "../src/platform/index.js";
 import type { DiscoveredJava } from "../src/java/requirements/index.js";
 
-export { ORCH_BASE, FAKE_PROFILE_ID_HYPHEN, FAKE_USERNAME };
+export { ORCH_BASE, FAKE_PROFILE_ID_HYPHEN, FAKE_USERNAME, testNetworkPolicy };
 
 export function playAccountIdA(): string {
   return accountIdFromMinecraftUuid(FAKE_PROFILE_ID_HYPHEN);
@@ -123,7 +124,9 @@ export async function buildPlayDeps(opts: {
     runner,
     java,
     requireClasspathFiles: false,
-    allowIncompleteRuntime: true
+    allowIncompleteRuntime: true,
+    networkHarness: orch.networkHarness,
+    networkRuntime: orch.networkRuntime ?? { kind: "test-harness" }
   };
   return { deps, accounts, secure, transport, runner, clock, accountId };
 }

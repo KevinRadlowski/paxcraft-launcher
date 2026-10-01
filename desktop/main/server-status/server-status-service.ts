@@ -1,5 +1,5 @@
 import type { ServerStatusDto, ServerReachabilityState } from "../../shared/contract.js";
-import { SWEETCRAFT_SERVER_ADDRESS } from "../../shared/contract.js";
+import { PAX_SERVER_ADDRESS_UNCONFIGURED } from "../../shared/contract.js";
 import {
   McStatusOfflineError,
   McStatusTimeoutError,
@@ -18,6 +18,18 @@ export type ServerStatusPingFn = (
 }>;
 
 const DEFAULT_TIMEOUT_MS = 4000;
+
+/** Injected / future product config — null means no ping (PACK-PAX-05). */
+let configuredServerAddress: string | null = null;
+
+/** Test helper — set Pax server host (null = unconfigured). */
+export function setConfiguredServerAddressForTests(address: string | null): void {
+  configuredServerAddress = address;
+}
+
+export function getConfiguredServerAddress(): string | null {
+  return configuredServerAddress;
+}
 
 export function normalizeServerStatusDto(raw: unknown): ServerStatusDto {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
@@ -53,7 +65,7 @@ export function normalizeServerStatusDto(raw: unknown): ServerStatusDto {
   const address =
     typeof o.address === "string" && o.address.length > 0
       ? o.address.slice(0, 253)
-      : SWEETCRAFT_SERVER_ADDRESS;
+      : PAX_SERVER_ADDRESS_UNCONFIGURED;
 
   return {
     state,
@@ -66,7 +78,10 @@ export function normalizeServerStatusDto(raw: unknown): ServerStatusDto {
   };
 }
 
-function unknownStatus(checkedAt = new Date().toISOString()): ServerStatusDto {
+function unknownStatus(
+  checkedAt = new Date().toISOString(),
+  address: string = PAX_SERVER_ADDRESS_UNCONFIGURED
+): ServerStatusDto {
   return {
     state: "UNKNOWN",
     latencyMs: null,
@@ -74,11 +89,14 @@ function unknownStatus(checkedAt = new Date().toISOString()): ServerStatusDto {
     playersMax: null,
     versionLabel: null,
     checkedAt,
-    address: SWEETCRAFT_SERVER_ADDRESS
+    address
   };
 }
 
-function offlineStatus(checkedAt = new Date().toISOString()): ServerStatusDto {
+function offlineStatus(
+  checkedAt = new Date().toISOString(),
+  address: string = PAX_SERVER_ADDRESS_UNCONFIGURED
+): ServerStatusDto {
   return {
     state: "OFFLINE",
     latencyMs: null,
@@ -86,13 +104,15 @@ function offlineStatus(checkedAt = new Date().toISOString()): ServerStatusDto {
     playersMax: null,
     versionLabel: null,
     checkedAt,
-    address: SWEETCRAFT_SERVER_ADDRESS
+    address
   };
 }
 
 /**
  * Main-side server status service.
- * Host/port come ONLY from product constant — never from renderer payload.
+ * Host/port come ONLY from product config — never from renderer payload.
+ * PACK-PAX-05: when server address is unset, return UNKNOWN without ping
+ * (never fake "OFFLINE" for historical SweetCraft hosts).
  */
 export class ServerStatusService {
   private inFlight: Promise<ServerStatusDto> | null = null;
@@ -115,9 +135,13 @@ export class ServerStatusService {
 
   private async query(): Promise<ServerStatusDto> {
     const checkedAt = new Date().toISOString();
+    const host = getConfiguredServerAddress();
+    if (!host) {
+      return unknownStatus(checkedAt, PAX_SERVER_ADDRESS_UNCONFIGURED);
+    }
     try {
       const result = await this.ping({
-        host: SWEETCRAFT_SERVER_ADDRESS,
+        host,
         timeoutMs: this.timeoutMs
       });
       return normalizeServerStatusDto({
@@ -127,18 +151,16 @@ export class ServerStatusService {
         playersMax: result.playersMax,
         versionLabel: result.versionLabel,
         checkedAt,
-        address: SWEETCRAFT_SERVER_ADDRESS
+        address: host
       });
     } catch (e) {
       if (e instanceof McStatusTimeoutError) {
-        // Timeout → UNKNOWN (no proof of offline).
-        return unknownStatus(checkedAt);
+        return unknownStatus(checkedAt, host);
       }
       if (e instanceof McStatusOfflineError) {
-        return offlineStatus(checkedAt);
+        return offlineStatus(checkedAt, host);
       }
-      // Unexpected — fail closed as UNKNOWN, never leak message.
-      return unknownStatus(checkedAt);
+      return unknownStatus(checkedAt, host);
     }
   }
 }
@@ -153,4 +175,5 @@ export function getServerStatusService(): ServerStatusService {
 /** Test helper — reset singleton between suites. */
 export function resetServerStatusServiceForTests(): void {
   singleton = null;
+  configuredServerAddress = null;
 }

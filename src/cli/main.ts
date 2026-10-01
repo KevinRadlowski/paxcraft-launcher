@@ -1,9 +1,12 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LAUNCHER_VERSION, PRODUCT_NAME } from "../version.js";
 import { FetchHttpClient } from "../distribution/http/index.js";
-import { DEFAULT_PRODUCT_BASE } from "../distribution/urls/index.js";
+import {
+  assertPaxLiveAuthNetworkAllowed,
+  requireConfiguredDistributionOrigin
+} from "../product/paxNetworkConfig.js";
 import { loadTrustedKeyStoreFromFile } from "../core/trust/index.js";
 import { resolveLatestRelease } from "../core/resolve/index.js";
 import { FileAntiRollbackStore } from "../instance/state/index.js";
@@ -82,7 +85,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 
 function printHelp(): void {
-  console.log(`SweetCraft Launcher CLI (dev)
+  console.log(`PaxCraft Launcher — CLI (dev)
 
 Usage:
   pnpm launcher:version
@@ -102,9 +105,9 @@ Usage:
 Notes:
   --instance / --instance-root optional (default: SweetCraft instances/sweetcraft under data dir).
   --runtime-root optional for install/update/repair/play (default: runtime under data dir).
-  --data-dir optional for auth commands (default: %APPDATA%\\SweetCraft Launcher\\launcher-data on Windows).
+  --data-dir optional for auth commands (default: %APPDATA%\\PaxCraft Launcher — \\launcher-data on Windows).
   --skip-runtime skips Minecraft/Fabric artefact prep (pack-only).
-  PLAY does not auto install/update/repair — fix readiness first.
+  PLAY does not auto install/update/repair â€” fix readiness first.
   CLI play keeps the process alive until game exit (lock/argfile correctness).
   Automated tests must not hit the network.
   Auth live currently: BLOCKED_EXTERNAL_APPID_APPROVAL (does not block install/update/repair).
@@ -114,7 +117,7 @@ Notes:
 }
 
 function printInstanceHelp(cmd: string): void {
-  console.log(`SweetCraft Launcher — ${cmd}
+  console.log(`PaxCraft Launcher — ${cmd}
 
 Required:
   --instance-root <path>
@@ -123,7 +126,7 @@ Required:
 }
 
 function printRuntimeHelp(cmd: string): void {
-  console.log(`SweetCraft Launcher — ${cmd}
+  console.log(`PaxCraft Launcher — ${cmd}
 
 Required:
   --runtime-root <path>   Isolated runtime directory (never implicit .minecraft)
@@ -193,7 +196,9 @@ async function buildOrchestratorDeps(
   if (channel !== "dev" && channel !== "beta" && channel !== "stable") {
     throw new LauncherError(ErrorCode.INVALID_CHANNEL, "--channel is required (dev|beta|stable)");
   }
-  const productBase = typeof flags.origin === "string" ? flags.origin : DEFAULT_PRODUCT_BASE;
+  const productBase = requireConfiguredDistributionOrigin({
+    explicit: typeof flags.origin === "string" ? flags.origin : null
+  });
   const trustedKeysPath =
     typeof flags["trusted-keys"] === "string"
       ? flags["trusted-keys"]
@@ -219,7 +224,7 @@ async function buildOrchestratorDeps(
 }
 
 function printOrchestratorHelp(cmd: string): void {
-  console.log(`SweetCraft Launcher — ${cmd}
+  console.log(`PaxCraft Launcher — ${cmd}
 
 Options:
   --channel <dev|beta|stable>   required
@@ -354,7 +359,7 @@ async function cmdRepair(flags: Record<string, string | boolean>): Promise<void>
 
 async function cmdPlay(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — play
+    console.log(`PaxCraft Launcher — play
 
 Options:
   --channel <dev|beta|stable>   required
@@ -363,7 +368,7 @@ Options:
   --trusted-keys <path>         optional trusted public key store override
   --account <accountId>         optional (else lastUsed / single account)
   --memory <MiB>                max heap (default 2048)
-  --wait                        wait for game exit (default: always wait — lock safety)
+  --wait                        wait for game exit (default: always wait â€” lock safety)
   --json                        machine-readable output
 
 PLAY never auto-installs/updates/repairs.
@@ -451,7 +456,7 @@ Uses the embedded product Microsoft public client id (override via SWEETCRAFT_MI
       );
     }
 
-    // Always wait — detaching would risk orphaning GameProcessLock / argfile ownership.
+    // Always wait â€” detaching would risk orphaning GameProcessLock / argfile ownership.
     const exit = await game.completion;
     const exited = {
       operationId: game.operationId,
@@ -492,7 +497,9 @@ async function resolveForCli(flags: Record<string, string | boolean>) {
   if (channel !== "dev" && channel !== "beta" && channel !== "stable") {
     throw new LauncherError(ErrorCode.INVALID_CHANNEL, "--channel is required (dev|beta|stable)");
   }
-  const origin = typeof flags.origin === "string" ? flags.origin : DEFAULT_PRODUCT_BASE;
+  const origin = requireConfiguredDistributionOrigin({
+    explicit: typeof flags.origin === "string" ? flags.origin : null
+  });
   const trustedKeysPath =
     typeof flags["trusted-keys"] === "string"
       ? flags["trusted-keys"]
@@ -705,7 +712,7 @@ async function cmdRuntimeRepair(flags: Record<string, string | boolean>): Promis
 
 async function cmdJavaDiscover(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — java-discover
+    console.log(`PaxCraft Launcher — java-discover
 
 Optional:
   --managed-java <path-to-java-binary>
@@ -725,7 +732,7 @@ Optional:
 }
 
 function printLaunchPlanHelp(): void {
-  console.log(`SweetCraft Launcher — launch-plan (dry-run)
+  console.log(`PaxCraft Launcher — launch-plan (dry-run)
 
 Required:
   --runtime-root <path>
@@ -822,7 +829,7 @@ async function cmdLaunchPlan(flags: Record<string, string | boolean>): Promise<v
 
 async function cmdAuthInfo(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — auth-info
+    console.log(`PaxCraft Launcher — auth-info
 
 Prints non-secret OAuth / auth architecture summary.
 Never prints tokens, codeVerifier, or client_secret (none exists).
@@ -855,7 +862,7 @@ Never prints tokens, codeVerifier, or client_secret (none exists).
 
 async function cmdAuthUrl(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — auth-url (DEV)
+    console.log(`PaxCraft Launcher — auth-url (DEV)
 
 Generates a PKCE authorization URL for development.
 Never prints codeVerifier.
@@ -907,7 +914,7 @@ Optional:
 
 async function cmdAuthLogin(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — auth-login (DEV / LIVE)
+    console.log(`PaxCraft Launcher — auth-login (DEV / LIVE)
 
 Interactive Microsoft login via system browser + loopback callback.
 Never prints tokens. Never accepts a password.
@@ -916,7 +923,7 @@ Required live gate:
   --live
   and/or SWEETCRAFT_ALLOW_LIVE_AUTH=1
 
-Client id (public UUID — not a secret):
+Client id (public UUID â€” not a secret):
   embedded product default
   optional override: SWEETCRAFT_MICROSOFT_CLIENT_ID or --client-id <uuid>
 
@@ -928,6 +935,7 @@ Optional:
   }
   let redirectUriForDiag: string | undefined;
   try {
+    assertPaxLiveAuthNetworkAllowed();
     assertLiveAuthEnabled({ liveFlag: flags.live === true });
     const clientId = typeof flags["client-id"] === "string" ? flags["client-id"] : undefined;
     const launcherAuth = resolveLauncherAuthConfig({
@@ -976,7 +984,7 @@ Optional:
 
 async function cmdAuthStatus(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — auth-status
+    console.log(`PaxCraft Launcher — auth-status
 
 Shows SIGNED_OUT or account metadata only (never tokens).
 
@@ -1010,7 +1018,7 @@ Optional:
 
 async function cmdAuthLogout(flags: Record<string, string | boolean>): Promise<void> {
   if (flags.help) {
-    console.log(`SweetCraft Launcher — auth-logout
+    console.log(`PaxCraft Launcher — auth-logout
 
 Deletes local secure refresh credential + account metadata.
 Does not claim remote Microsoft revocation.
@@ -1034,7 +1042,7 @@ Optional:
     const secure = createPlatformSecureRefreshTokenStore(dataDir);
     const store = new SecureBackedAuthTokenStore(secure, { persistRefresh: secure.available });
     const accounts = new FileAccountRegistry(dataDir);
-    // Minimal config for logout (no network) — redirect unused
+    // Minimal config for logout (no network) â€” redirect unused
     const launcherAuth = (() => {
       try {
         return resolveLauncherAuthConfig({

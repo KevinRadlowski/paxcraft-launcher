@@ -35,7 +35,8 @@ import {
   mountOrchBundle,
   createPlayTestEnv,
   buildPlayDeps,
-  seedAccountA
+  seedAccountA,
+  testNetworkPolicy
 } from "../../fixtures/playHarness.js";
 import { DEFAULT_LAUNCH_FEATURES } from "../../src/launch/features.js";
 
@@ -153,7 +154,8 @@ describe("0.5.0-beta.3 post-spawn ownership + runner race", { concurrency: 1 }, 
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure, { lastUsedAtMs: 55 });
@@ -177,7 +179,8 @@ describe("0.5.0-beta.3 post-spawn ownership + runner race", { concurrency: 1 }, 
             trust: bundle.trust,
             artefactSource: source,
             antiRollbackStore: built.deps.antiRollbackStore,
-            antiRollbackState: built.deps.antiRollbackState
+            antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
           }
         ),
       (e: unknown) => e instanceof LauncherError && e.code === ErrorCode.GAME_ALREADY_RUNNING
@@ -191,7 +194,8 @@ describe("0.5.0-beta.3 post-spawn ownership + runner race", { concurrency: 1 }, 
             trust: bundle.trust,
             artefactSource: source,
             antiRollbackStore: built.deps.antiRollbackStore,
-            antiRollbackState: built.deps.antiRollbackState
+            antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
           }
         ),
       (e: unknown) => e instanceof LauncherError && e.code === ErrorCode.GAME_ALREADY_RUNNING
@@ -250,7 +254,8 @@ describe("0.5.0-beta.3 post-spawn ownership + runner race", { concurrency: 1 }, 
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);

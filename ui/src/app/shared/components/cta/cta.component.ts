@@ -55,6 +55,7 @@ import { ScTranslatePipe } from '../../../core/i18n/translate.pipe';
       .play-icon {
         font-size: 0.85em;
         opacity: 0.95;
+        color: inherit;
       }
 
       .hint {

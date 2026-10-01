@@ -4,9 +4,9 @@
  */
 import path from "node:path";
 
-export const PRODUCT_USER_DATA_DIR_NAME = "SweetCraft Launcher";
+export const PRODUCT_USER_DATA_DIR_NAME = "PaxCraft Launcher";
 export const LAUNCHER_DATA_DIR_NAME = "launcher-data";
-export const DEFAULT_INSTANCE_ID = "sweetcraft";
+export const DEFAULT_INSTANCE_ID = "paxcraft";
 
 /** {userData}/launcher-data */
 export function launcherDataDirFromUserData(userData: string): string {

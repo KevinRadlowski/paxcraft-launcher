@@ -2,7 +2,7 @@
   "name": "sweetcraft-launcher",
   "version": "0.6.0-rc.18",
   "private": true,
-  "description": "SweetCraft Launcher — client verifier/consumer of the SweetCraft distribution protocol",
+  "description": "PaxCraft Launcher — client verifier/consumer of the inherited distribution protocol",
   "author": {
     "name": "SweetCraft / XBASE"
   },

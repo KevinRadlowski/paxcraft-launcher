@@ -156,8 +156,30 @@ export async function buildPlayContext(opts: BuildPlayContextOptions): Promise<B
     throw toUiError("TRUST_ERROR", "error.install.trust");
   }
 
-  const productBase =
-    opts.productBase ?? (await loadDefaultProductBase(opts.distRoot)) ?? mods.DEFAULT_PRODUCT_BASE;
+  const loadedBase =
+    opts.productBase ?? (await loadDefaultProductBase(opts.distRoot));
+  if (!loadedBase) {
+    throw toUiError("DISTRIBUTION_NOT_CONFIGURED", "error.network");
+  }
+  // Refuse historical SweetCraft CDN even if somehow injected.
+  try {
+    const u = new URL(loadedBase);
+    const host = u.hostname.toLowerCase();
+    if (
+      host === "cdn.xnosweet.fr" ||
+      host === "www.xnosweet.fr" ||
+      host === "xnosweet.fr" ||
+      host === "xbase.fr" ||
+      host === "www.xbase.fr" ||
+      host === "sweetcraft.datho.st"
+    ) {
+      throw toUiError("HISTORICAL_DESTINATION_BLOCKED", "error.network");
+    }
+  } catch (e) {
+    if (e && typeof e === "object" && "code" in e) throw e;
+    throw toUiError("DISTRIBUTION_NOT_CONFIGURED", "error.network");
+  }
+  const productBase = loadedBase;
 
   const sessionCache = opts.sessionCache ?? new mods.PlaySessionCache();
   const startGame = opts.startGameOverride ?? mods.startGame;

@@ -17,10 +17,10 @@ const safeDiag = readFileSync(
 const lifecycle = readFileSync(path.join(root, "desktop/main/lifecycle.ts"), "utf8");
 
 describe("PACK-12D upgrade/uninstall source contracts", () => {
-  it("NSIS preserves AppData on uninstall", () => {
+  it("NSIS preserves AppData on uninstall (Pax identity)", () => {
     assert.match(yml, /deleteAppDataOnUninstall:\s*false/);
-    assert.match(yml, /appId:\s*fr\.xbase\.sweetcraft\.launcher/);
-    assert.match(yml, /productName:\s*SweetCraft Launcher/);
+    assert.match(yml, /appId:\s*org\.paxhorizon\.paxcraft\.launcher/);
+    assert.match(yml, /productName:\s*PaxCraft Launcher/);
   });
 
   it("PLAYER_INSTALL distinguishes launcher vs pack update and documents preserve contract", () => {

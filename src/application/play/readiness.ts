@@ -65,7 +65,9 @@ export async function assertPlayReadiness(
     antiRollbackStore: deps.antiRollbackStore,
     antiRollbackState: deps.antiRollbackState,
     ...(deps.emitter ? { emitter: deps.emitter } : {}),
-    ...(deps.createOperationId ? { createOperationId: deps.createOperationId } : {})
+    ...(deps.createOperationId ? { createOperationId: deps.createOperationId } : {}),
+    ...(deps.networkHarness ? { networkHarness: deps.networkHarness } : {}),
+    ...(deps.networkRuntime ? { networkRuntime: deps.networkRuntime } : {})
   };
 
   const report = await inspectInstanceStatus(

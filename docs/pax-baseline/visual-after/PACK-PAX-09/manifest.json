@@ -1,0 +1,152 @@
+{
+  "lot": "PACK-PAX-09",
+  "capturedAt": "2026-10-01T13:35:35.581Z",
+  "gitHead": "33499137b02a3057f3891b978a8b484f06d44c57",
+  "wipNote": "WIP PACK-PAX-03..09 present (uncommitted). Captures reflect PACK-PAX-09 diagnostics + PaxCraft path fixture.",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "viewportNarrow": {
+    "width": 1100,
+    "height": 700
+  },
+  "deviceScaleFactor": 1,
+  "browser": {
+    "product": "Google Chrome (system, CDP headless)",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "headless": true
+  },
+  "gateway": "DevLauncherDesktopGateway (ng serve development, no preload)",
+  "rendererBase": "http://127.0.0.1:4202",
+  "fictionalValues": [
+    "Chemin instance Dev gateway = C:\\\\Dev\\\\PaxCraft (fictif)",
+    "États AUTHENTICATED / READY = fixtures Dev"
+  ],
+  "networkPolicy": {
+    "allow": [
+      "127.0.0.1",
+      "localhost",
+      "data:",
+      "blob:"
+    ],
+    "blockedExternalCount": 1,
+    "blockedExternalSamples": [
+      "https://example.com/"
+    ],
+    "mechanism": "CDP Fetch.failRequest for non-loopback"
+  },
+  "scenes": [
+    {
+      "id": "01-diagnostics-top",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Diagnostics — haut (états + support)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "01-diagnostics-top.png",
+      "sha256": "c44f39716d5b6e6ce5514c122d4d4dd23466c4f9a35525bfbd18e2a1d8642ac4",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "02-diagnostics-technical-open",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-technical"
+      },
+      "note": "Informations techniques ouvertes",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "02-diagnostics-technical-open.png",
+      "sha256": "aa949b0f456aea523afe5b6f834ddecf04f58e96b3e0c9db0213559653cab94a",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "03-diagnostics-devtools-open",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-devtools"
+      },
+      "note": "Outils de développement ouverts",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "03-diagnostics-devtools-open.png",
+      "sha256": "05111e3b428411ba01c35f27dfb2d5f8e51edd66c5ed31a142bcedd2aeb5153e",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "04-diagnostics-bottom",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-devtools-scroll-bottom"
+      },
+      "note": "Diagnostics — bas (outils Dev)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "04-diagnostics-bottom.png",
+      "sha256": "9f32a09c80780f72023e27c992c24d3f1ebf339b0909da27574d4fd7e00d033f",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "05-settings-path-paxcraft",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Paramètres — chemin fictif C:\\\\Dev\\\\PaxCraft",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "05-settings-path-paxcraft.png",
+      "sha256": "35d09f543586b3ac5b5432476e6f901c1ac93380320f860549c5ad35955f07ea",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "06-home-ready",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Accueil READY — non contamination",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "06-home-ready.png",
+      "sha256": "a47dc65c0e46c23e2e829dec2441398516260a1b71ad7a28f53629efc214148d",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "07-diagnostics-narrow",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-technical"
+      },
+      "note": "Diagnostics 1100×700",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "07-diagnostics-narrow.png",
+      "sha256": "7f8aee3e687db96c60274935261d76dad1f22283cf010d14ca50c4f6af7294eb",
+      "blockedExternalHits": 0
+    }
+  ],
+  "limits": [
+    "Captures navigateur du renderer Angular — ne qualifient pas Electron ni chrome Windows.",
+    "Fixtures Dev gateway uniquement.",
+    "Préserver visual-after/PACK-PAX-07, 07.1 et 08.",
+    "Aucun package npm ajouté; Chrome système + CDP natif Node."
+  ]
+}

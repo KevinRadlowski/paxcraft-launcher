@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Clears the unpackaged fake-play persistence directory marker file.
  * Never touches launcher-data / real instance / 0.5B transaction files.
  *
@@ -19,7 +19,7 @@ function defaultDir(): string {
   // Electron unpackaged typically uses package.json "name".
   const candidates = [
     path.join(roaming, "sweetcraft-launcher", "dev-fake-play"),
-    path.join(roaming, "SweetCraft Launcher", "dev-fake-play")
+    path.join(roaming, "PaxCraft Launcher", "dev-fake-play")
   ];
   for (const c of candidates) {
     if (fs.existsSync(path.join(c, FAKE_PLAY_STORE_FILENAME))) return c;

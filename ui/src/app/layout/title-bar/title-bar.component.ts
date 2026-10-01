@@ -13,7 +13,7 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
   template: `
     <header class="titlebar" role="banner">
       <div class="drag">
-        <p class="tagline sc-script" aria-hidden="true">{{ 'shell.tagline.en' | scTranslate }}</p>
+        <p class="tagline" aria-hidden="true">{{ 'shell.tagline.en' | scTranslate }}</p>
       </div>
 
       <div class="meta" aria-label="Identité serveur">
@@ -24,7 +24,14 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
             [class.offline]="serverStatus().state === 'OFFLINE'"
             aria-hidden="true"
           ></span>
-          <span class="addr">{{ 'status.server' | scTranslate }} : {{ store.serverAddress() }}</span>
+          <span class="addr"
+            >{{ 'status.server' | scTranslate }} :
+            @if (displayServerAddress(); as addr) {
+              {{ addr }}
+            } @else {
+              {{ 'home.server.unconfigured' | scTranslate }}
+            }</span
+          >
           <span class="sep" aria-hidden="true">·</span>
           <span class="state">{{ stateLabelKey() | scTranslate }}</span>
           @if (latencyLabel(); as lat) {
@@ -88,8 +95,8 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
         align-items: center;
         gap: var(--sc-space-4);
         padding: 0 var(--sc-space-2) 0 var(--sc-space-4);
-        background: rgba(14, 14, 24, 0.92);
-        border-bottom: 1px solid var(--sc-border-subtle);
+        background: rgba(16, 23, 31, 0.96);
+        border-bottom: 1px solid var(--sc-border-default);
         -webkit-app-region: drag;
         user-select: none;
       }
@@ -99,12 +106,12 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
       }
 
       .tagline {
-        font-size: 0.85rem;
-        color: #d8b4fe;
+        font-size: 0.8rem;
+        color: var(--sc-text-secondary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        opacity: 0.92;
+        letter-spacing: 0.02em;
       }
 
       .meta,
@@ -121,8 +128,8 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
         gap: 0.4rem;
         padding: 0.28rem 0.85rem;
         border-radius: var(--sc-radius-full);
-        background: rgba(18, 18, 28, 0.82);
-        border: 1px solid rgba(196, 181, 253, 0.18);
+        background: var(--sc-surface-1);
+        border: 1px solid var(--sc-border-default);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
         font-size: var(--sc-text-xs);
         color: var(--sc-text-primary);
@@ -145,7 +152,7 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
         width: 0.45rem;
         height: 0.45rem;
         border-radius: 50%;
-        background: #c4b5fd;
+        background: var(--sc-text-muted);
         flex-shrink: 0;
       }
 
@@ -198,8 +205,9 @@ import { HomeServerStatusService } from '../../features/home/home-server-status.
         .tagline {
           display: none;
         }
+        /* Keep 3 columns — collapsing to 2 misplaces window controls near the sidebar. */
         .titlebar {
-          grid-template-columns: 1fr auto;
+          grid-template-columns: minmax(1.5rem, 1fr) auto auto;
         }
       }
     `,
@@ -228,4 +236,12 @@ export class TitleBarComponent {
     if (s.state !== 'ONLINE' || s.latencyMs == null) return null;
     return `${s.latencyMs} ms`;
   });
+
+  displayServerAddress(): string {
+    const raw = this.store.serverAddress()?.trim() ?? '';
+    if (!raw || raw === 'not-configured' || /sweetcraft/i.test(raw)) {
+      return '';
+    }
+    return raw;
+  }
 }

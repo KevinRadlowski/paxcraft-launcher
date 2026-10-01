@@ -27,12 +27,23 @@ export interface ExternalUrlRule {
   readonly pathPrefix: string;
 }
 
-/** Structured allowlist — not string-prefix security. */
-export const EXTERNAL_URL_RULES: readonly ExternalUrlRule[] = [
-  { protocol: "https:", hostname: "sweetcraft.datho.st", port: null, pathPrefix: "/" },
-  { protocol: "https:", hostname: "xbase.fr", port: null, pathPrefix: "/" },
-  { protocol: "https:", hostname: "www.xnosweet.fr", port: null, pathPrefix: "/sweetcraft" }
-];
+/** Structured allowlist — not string-prefix security.
+ * PACK-PAX-05: empty until Pax community/support URLs are qualified.
+ * Historical SweetCraft hosts are intentionally absent (fail closed).
+ */
+export const EXTERNAL_URL_RULES: readonly ExternalUrlRule[] = [];
+
+/** Historical destinations blocked for documentation / explicit deny tests (PACK-PAX-05). */
+export const HISTORICAL_EXTERNAL_HOSTS: ReadonlySet<string> = Object.freeze(
+  new Set([
+    "cdn.xnosweet.fr",
+    "www.xnosweet.fr",
+    "xnosweet.fr",
+    "xbase.fr",
+    "www.xbase.fr",
+    "sweetcraft.datho.st"
+  ])
+);
 
 /**
  * Parse DESKTOP_DEV_SERVER into a trusted loopback origin.

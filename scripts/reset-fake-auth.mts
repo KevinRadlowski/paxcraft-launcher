@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Clears the unpackaged fake-auth persistence directory marker file.
  * Never touches launcher-data / DPAPI / AccountRegistry.
  *
@@ -19,7 +19,7 @@ function defaultDir(): string {
   // Electron unpackaged typically uses package.json "name".
   const candidates = [
     path.join(roaming, "sweetcraft-launcher", "dev-fake-auth"),
-    path.join(roaming, "SweetCraft Launcher", "dev-fake-auth")
+    path.join(roaming, "PaxCraft Launcher", "dev-fake-auth")
   ];
   for (const c of candidates) {
     if (fs.existsSync(path.join(c, FAKE_AUTH_STORE_FILENAME))) return c;

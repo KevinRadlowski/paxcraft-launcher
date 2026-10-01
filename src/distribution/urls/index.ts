@@ -1,7 +1,17 @@
 import { ErrorCode, LauncherError } from "../../core/errors/index.js";
 import type { ReleaseChannelName } from "../../core/channel/index.js";
 
-export const DEFAULT_PRODUCT_BASE = "https://cdn.xnosweet.fr/sweetcraft";
+/**
+ * Historical SweetCraft CDN — reference / blocked destination only (PACK-PAX-05).
+ * Never use as operational fallback.
+ */
+export const HISTORICAL_SWEETCRAFT_PRODUCT_BASE = "https://cdn.xnosweet.fr/sweetcraft";
+
+/**
+ * @deprecated PACK-PAX-05 — alias of HISTORICAL_SWEETCRAFT_PRODUCT_BASE.
+ * Operational code must use requireConfiguredDistributionOrigin.
+ */
+export const DEFAULT_PRODUCT_BASE = HISTORICAL_SWEETCRAFT_PRODUCT_BASE;
 
 /** Normalize and validate a product CDN base URL (HTTPS, no credentials/query/fragment). */
 export function normalizeProductBase(origin: string): string {

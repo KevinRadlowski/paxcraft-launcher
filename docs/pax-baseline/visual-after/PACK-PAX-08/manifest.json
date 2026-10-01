@@ -1,0 +1,274 @@
+{
+  "lot": "PACK-PAX-08",
+  "capturedAt": "2026-10-01T12:51:30.567Z",
+  "gitHead": "33499137b02a3057f3891b978a8b484f06d44c57",
+  "wipNote": "WIP PACK-PAX-03..08 present (uncommitted). Captures reflect PACK-PAX-08 account/settings + diagnostics reference.",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "viewportNarrow": {
+    "width": 1100,
+    "height": 700
+  },
+  "deviceScaleFactor": 1,
+  "browser": {
+    "product": "Google Chrome (system, CDP headless)",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "headless": true
+  },
+  "gateway": "DevLauncherDesktopGateway (ng serve development, no preload)",
+  "rendererBase": "http://127.0.0.1:4202",
+  "fictionalValues": [
+    "Comptes AUTHENTICATED / RESTORING / ERROR = fixtures Dev gateway",
+    "Mémoire dirty = slider déplacé côté UI sans save",
+    "Serveur adresse DTO not-configured — libellé présentation uniquement"
+  ],
+  "networkPolicy": {
+    "allow": [
+      "127.0.0.1",
+      "localhost",
+      "data:",
+      "blob:"
+    ],
+    "blockedExternalCount": 1,
+    "blockedExternalSamples": [
+      "https://example.com/"
+    ],
+    "mechanism": "CDP Fetch.failRequest for non-loopback"
+  },
+  "scenes": [
+    {
+      "id": "01-account-signed-out",
+      "route": "/account",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": null
+      },
+      "note": "Compte déconnecté",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "01-account-signed-out.png",
+      "sha256": "e0d265c8ae9dbc7daf2343c117b143f86e026f4c23f57fee7f446dd72c073baf",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "02-account-authenticated",
+      "route": "/account",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Compte connecté fictif (fixture AUTHENTICATED)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "02-account-authenticated.png",
+      "sha256": "a8caa466b60cee737e1e0fe0ddb20619594d2f4ee702d9fd32b8853804b0e648",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "03-account-restoring",
+      "route": "/account",
+      "fixture": {
+        "auth": "RESTORING",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Compte chargement / restauration session",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "03-account-restoring.png",
+      "sha256": "0cf23634b6d8f016a22f44d5c25c2eedd84c26e248e347d14569a94a9aa4ce1a",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "04-account-error",
+      "route": "/account",
+      "fixture": {
+        "auth": "ERROR",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Compte erreur auth (fixture ERROR)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "04-account-error.png",
+      "sha256": "a1833a9aa0716dbe3dc5530ce97d45c7cba6c389e0aa784c044ae36fabdd693e",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "05-settings-top",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Paramètres — haut (mémoire / interface)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "05-settings-top.png",
+      "sha256": "cb929cdb39b6a6ca70c89af0e619a4204609b9b1698d7d0f74176f5f4007b598",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "06-settings-bottom",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "scroll-bottom"
+      },
+      "note": "Paramètres — bas (système / à propos)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "06-settings-bottom.png",
+      "sha256": "4949933cc745ead75064e56f084ca2d9485c0bd5601e6106982cda3ce6fc5b1e",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "07-settings-memory-dirty",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "memory-dirty"
+      },
+      "note": "Mémoire modifiée avant enregistrement",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "07-settings-memory-dirty.png",
+      "sha256": "589add8efb948ce911688497752fcceb6d1064d8fa27f114bc741868bec01c77",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "08-settings-location-unavailable",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "location-unavailable"
+      },
+      "note": "Emplacement indisponible — fixture Dev absente",
+      "status": "NOT_CAPTURED",
+      "reason": "Dev gateway settings always expose instanceLocationAvailable=true — aucune fixture d’emplacement indisponible sans changement métier",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "09-diagnostics-top",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": null
+      },
+      "note": "Diagnostics actuel — haut (référence, non refondu)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "09-diagnostics-top.png",
+      "sha256": "dbce92e98c84c991f7d0ff4304c2af3d5e6112f7c80838af3aba966c78b2f346",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "10-diagnostics-bottom",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": "scroll-bottom"
+      },
+      "note": "Diagnostics actuel — bas",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "10-diagnostics-bottom.png",
+      "sha256": "7bed489415e2a303e21702f9790508b10c8cec5bbf80dcc4c1a39c3d870a072f",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "11-home-ready",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Accueil READY — composants partagés",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "11-home-ready.png",
+      "sha256": "a47dc65c0e46c23e2e829dec2441398516260a1b71ad7a28f53629efc214148d",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "12-home-uninstall-modal",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-uninstall-modal"
+      },
+      "note": "Modale retrait d’instance",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "12-home-uninstall-modal.png",
+      "sha256": "febdf919d6cc1d229f9ce7440f6e09e34be6bd5ce5f20074bd2b975044843a68",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "13-account-authenticated-narrow",
+      "route": "/account",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Compte connecté 1100×700",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "13-account-authenticated-narrow.png",
+      "sha256": "852ad411ff21639fccdb3c605af494cbadb96fd81edce083d2ebbedca49b3076",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "14-settings-narrow",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Paramètres 1100×700",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "14-settings-narrow.png",
+      "sha256": "4239334b352d8f5baffc4d8f8f806295420a12cc597605fce64065a6e7aa2d20",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "15-home-ready-narrow",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Accueil READY 1100×700",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "15-home-ready-narrow.png",
+      "sha256": "9b1871e0aa90b2a4ecfc8b05e6c07605d06e8990cde8ed39e1a2aed43cb89833",
+      "blockedExternalHits": 0
+    }
+  ],
+  "notCapturedMidFlightUpdateRepair": "Dev gateway install phases use ~20ms delays — mid-flight update/repair animation not separately frozen; readiness fixtures captured instead.",
+  "limits": [
+    "Captures navigateur du renderer Angular — ne qualifient pas Electron ni chrome Windows.",
+    "Fixtures Dev gateway uniquement.",
+    "Diagnostics capturé tel quel — aucune refonte PACK-PAX-08.",
+    "Préserver visual-after/PACK-PAX-07 et PACK-PAX-07.1.",
+    "Aucun package npm ajouté; Chrome système + CDP natif Node."
+  ]
+}

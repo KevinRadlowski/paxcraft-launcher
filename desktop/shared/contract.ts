@@ -382,7 +382,7 @@ export interface SafeDiagnosticsDto {
   readonly launcherDataRoot?: string | null;
   readonly defaultInstanceRoot?: string | null;
   readonly defaultRuntimeRoot?: string | null;
-  readonly dataRootSource?: "explicit" | "env" | "canonical" | "legacy-fallback" | null;
+  readonly dataRootSource?: "explicit" | "env" | "canonical" | null;
   /** Managed / system Java selection — paths and majors only, never tokens. */
   readonly javaSource?: "managed" | "JAVA_HOME" | "PATH" | "known_path" | "none" | null;
   readonly javaRequiredMajor?: number | null;
@@ -587,14 +587,17 @@ export interface SweetCraftDesktopApi {
   };
 }
 
+/**
+ * Historical SweetCraft Minecraft server — blocked; not used for Pax pings (PACK-PAX-05).
+ * @deprecated Do not ping. Use configured Pax serverAddress when qualified.
+ */
 export const SWEETCRAFT_SERVER_ADDRESS = "sweetcraft.datho.st";
 
-/** @deprecated use EXTERNAL_URL_RULES from trust-policy — kept for path aliases */
-export const EXTERNAL_URL_ALLOWLIST: readonly string[] = [
-  "https://sweetcraft.datho.st/",
-  "https://xbase.fr/",
-  "https://www.xnosweet.fr/sweetcraft"
-];
+/** DTO echo when Pax server is not configured (never a ping target). */
+export const PAX_SERVER_ADDRESS_UNCONFIGURED = "not-configured";
+
+/** @deprecated use EXTERNAL_URL_RULES from trust-policy — kept empty (PACK-PAX-05). */
+export const EXTERNAL_URL_ALLOWLIST: readonly string[] = [];
 
 /** Forbidden secret field names in renderer-visible payloads (static/security tests). */
 export const FORBIDDEN_AUTH_SECRET_KEYS = [

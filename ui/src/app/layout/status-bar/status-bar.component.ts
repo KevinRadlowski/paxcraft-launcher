@@ -27,16 +27,11 @@ import { ScProgressBarComponent } from '../../shared/components/progress-bar/pro
 
       <div class="center muted">
         @if (store.info(); as info) {
-          <span
-            >{{ info.name }} v{{ info.version }} | {{ 'shell.publisher' | scTranslate }} |
-            {{ 'shell.brand.line' | scTranslate }}</span
-          >
+          <span>{{ info.name }} v{{ info.version }} · {{ 'shell.brand.line' | scTranslate }}</span>
         }
       </div>
 
-      <div class="right">
-        <span class="slogan" aria-hidden="true">{{ 'shell.tagline.fr' | scTranslate }}</span>
-      </div>
+      <div class="right" aria-hidden="true"></div>
     </footer>
   `,
   styles: [
@@ -47,8 +42,8 @@ import { ScProgressBarComponent } from '../../shared/components/progress-bar/pro
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         padding: 0 var(--sc-space-5);
-        background: linear-gradient(90deg, rgba(18, 10, 28, 0.98), rgba(10, 10, 18, 0.96));
-        border-top: 1px solid rgba(196, 181, 253, 0.12);
+        background: var(--sc-bg-sidebar);
+        border-top: 1px solid var(--sc-border-default);
         font-size: var(--sc-text-xs);
         color: var(--sc-text-secondary);
         gap: var(--sc-space-4);
@@ -111,7 +106,7 @@ import { ScProgressBarComponent } from '../../shared/components/progress-bar/pro
       }
 
       .slogan {
-        font-style: italic;
+        font-style: normal;
         color: var(--sc-text-muted);
         white-space: nowrap;
       }

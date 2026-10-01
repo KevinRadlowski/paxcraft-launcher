@@ -1,4 +1,4 @@
-import { describe, it } from "node:test";
+﻿import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -22,7 +22,7 @@ import {
   cspForPolicy
 } from "./trust-helpers.js";
 
-describe("0.6.0-alpha.3 trust policy — top-level navigation", () => {
+describe("0.6.0-alpha.3 trust policy â€” top-level navigation", () => {
   const indexPath = path.join("C:", "SweetCraft", "ui", "dist", "browser", "index.html");
   const policy = createRendererTrustPolicy({
     mode: "production",
@@ -60,11 +60,10 @@ describe("0.6.0-alpha.3 trust policy — top-level navigation", () => {
     assert.equal(isAllowedNavigation(policy, "https://evil.example/"), false);
   });
 
-  it("approved external https is allowlisted for openExternal only", () => {
-    assert.equal(isAllowedExternalUrl("https://sweetcraft.datho.st/"), true);
-    assert.equal(isAllowedExternalUrl("https://xbase.fr/foo"), true);
-    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), true);
-    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft/"), true);
+  it("approved external https allowlist is empty until Pax links are qualified", () => {
+    assert.equal(isAllowedExternalUrl("https://sweetcraft.datho.st/"), false);
+    assert.equal(isAllowedExternalUrl("https://xbase.fr/foo"), false);
+    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), false);
     assert.equal(isAllowedExternalUrl("https://evil.example/"), false);
     assert.equal(isAllowedNavigation(policy, "https://sweetcraft.datho.st/"), false);
   });
@@ -78,15 +77,15 @@ describe("0.6.0-alpha.3 trust policy — top-level navigation", () => {
 });
 
 describe("0.6F.3 V3 product CDN vs community website", () => {
-  it("DEFAULT_PRODUCT_BASE remains CDN; website is separate allowlist entry", async () => {
+  it("DEFAULT_PRODUCT_BASE is historical-only; openExternal allowlist empty", async () => {
     const { DEFAULT_PRODUCT_BASE } = await import("../../src/distribution/urls/index.js");
     assert.equal(DEFAULT_PRODUCT_BASE, "https://cdn.xnosweet.fr/sweetcraft");
-    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), true);
+    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), false);
     assert.equal(isAllowedExternalUrl("https://evil.example/"), false);
   });
 });
 
-describe("0.6.0-alpha.3 trust policy — dev origin", () => {
+describe("0.6.0-alpha.3 trust policy â€” dev origin", () => {
   it("parses exact loopback URLs", () => {
     const a = parseDevServerUrl("http://127.0.0.1:4200/");
     assert.ok(a);
@@ -132,7 +131,7 @@ describe("0.6.0-alpha.3 IPC sender URL policy", () => {
 
   it("PACK-10.1: packaged baseHref ./ directory document URL is trusted IPC sender", () => {
     // Electron+Angular production baseHref "./" can drop index.html from the
-    // top-level frame URL (…/browser/#/home). IPC must still accept that SPA document.
+    // top-level frame URL (â€¦/browser/#/home). IPC must still accept that SPA document.
     const indexPath = path.join(
       "C:",
       "Users",
@@ -140,7 +139,7 @@ describe("0.6.0-alpha.3 IPC sender URL policy", () => {
       "AppData",
       "Local",
       "Programs",
-      "SweetCraft Launcher",
+      "PaxCraft Launcher",
       "resources",
       "app.asar",
       "ui",
@@ -248,14 +247,14 @@ describe("0.6.0-alpha.3 IPC result envelope", () => {
 describe("0.6.0-alpha.3 packaged env attack", () => {
   const indexPath = path.join("C:", "SweetCraft", "ui", "dist", "browser", "index.html");
 
-  it("packaged + development override → production", () => {
+  it("packaged + development override â†’ production", () => {
     assert.equal(
       resolveDesktopRuntimeModeForTest({ isPackaged: true, envOverride: "development" }),
       "production"
     );
   });
 
-  it("packaged + DESKTOP_DEV_SERVER → file target + production CSP", () => {
+  it("packaged + DESKTOP_DEV_SERVER â†’ file target + production CSP", () => {
     const policy = createRendererTrustPolicyForRuntime({
       isPackaged: true,
       indexHtmlPath: indexPath,
@@ -280,7 +279,7 @@ describe("0.6.0-alpha.3 packaged env attack", () => {
     );
   });
 
-  it("unpackaged + dev server → exact origin + development CSP", () => {
+  it("unpackaged + dev server â†’ exact origin + development CSP", () => {
     const policy = createRendererTrustPolicyForRuntime({
       isPackaged: false,
       indexHtmlPath: indexPath,

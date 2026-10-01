@@ -135,8 +135,40 @@ export async function createRealInstallBackend(
    */
   const skipRuntime = opts.skipRuntimePrep === true;
   const channel = opts.channel ?? PRODUCT_DEFAULT_CHANNEL;
-  const productBase =
-    opts.productBase ?? (await loadDefaultProductBase(opts.distRoot));
+  const loadedBase = opts.productBase ?? (await loadDefaultProductBase(opts.distRoot));
+  if (!loadedBase) {
+    throw mapInstallError(
+      Object.assign(new Error("Pax distribution origin is not configured"), {
+        code: "DISTRIBUTION_NOT_CONFIGURED"
+      })
+    );
+  }
+  try {
+    const u = new URL(loadedBase);
+    const host = u.hostname.toLowerCase();
+    if (
+      host === "cdn.xnosweet.fr" ||
+      host === "www.xnosweet.fr" ||
+      host === "xnosweet.fr" ||
+      host === "xbase.fr" ||
+      host === "www.xbase.fr" ||
+      host === "sweetcraft.datho.st"
+    ) {
+      throw mapInstallError(
+        Object.assign(new Error("historical SweetCraft destination refused"), {
+          code: "HISTORICAL_DESTINATION_BLOCKED"
+        })
+      );
+    }
+  } catch (e) {
+    if (e && typeof e === "object" && "code" in e) throw e;
+    throw mapInstallError(
+      Object.assign(new Error("Pax distribution origin is not configured"), {
+        code: "DISTRIBUTION_NOT_CONFIGURED"
+      })
+    );
+  }
+  const productBase = loadedBase;
   const trustedKeysPath =
     opts.trustedKeysPath ?? path.join(opts.distRoot, "..", "config", "trusted-keys.json");
 

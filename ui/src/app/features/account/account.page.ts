@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { AppStore } from '../../core/state/app.store';
 import { AuthActionsService } from '../../core/services/auth-actions.service';
 import { ModalService } from '../../core/services/modal.service';
-import { SWEETCRAFT_WEBSITE_URL } from '../../core/product-links';
-import { ScHeroComponent } from '../../shared/components/hero/hero.component';
 import { ScButtonComponent } from '../../shared/components/button/button.component';
 import { ScBadgeComponent } from '../../shared/components/badge/badge.component';
 import { ScTranslatePipe } from '../../core/i18n/translate.pipe';
@@ -15,141 +13,127 @@ import {
   msAuthRowState,
   sessionRowState,
 } from './account-presentation';
-import { ACCOUNT_ASSETS } from './account-assets';
-
-const SITE_URL = SWEETCRAFT_WEBSITE_URL;
-const HERO_URL = ACCOUNT_ASSETS.hero;
-const COMMUNITY_URL = ACCOUNT_ASSETS.community;
 
 @Component({
   selector: 'sc-account-page',
   standalone: true,
-  imports: [ScHeroComponent, ScButtonComponent, ScBadgeComponent, ScTranslatePipe],
+  imports: [ScButtonComponent, ScBadgeComponent, ScTranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="page" data-testid="account-page">
-      <div class="hero-stage">
-        <sc-hero [imageUrl]="heroUrl">
-          <h1 class="hero-title">{{ 'account.title' | scTranslate }}</h1>
-          <p class="hero-script sc-script">{{ 'account.hero.subtitle' | scTranslate }}</p>
-          <p class="hero-body">
-            {{
-              (connected() ? 'account.hero.body_connected' : 'account.hero.body') | scTranslate
-            }}
-          </p>
-        </sc-hero>
+      <header class="page-head">
+        <h1>{{ 'account.title' | scTranslate }}</h1>
+        <p class="page-lead">{{ 'account.subtitle' | scTranslate }}</p>
+      </header>
 
-        <section
-          class="identity"
-          data-testid="account-identity"
-          aria-live="polite"
-          [attr.aria-busy]="authState() === 'RESTORING' ? 'true' : null"
-        >
-          @if (authState() === 'RESTORING') {
-            <div class="identity-restoring">
-              <div class="avatar placeholder" aria-hidden="true">…</div>
-              <div class="identity-copy">
-                <p class="identity-name">{{ 'account.state.restoring' | scTranslate }}</p>
-                <p class="muted">
-                  {{ (store.authProgressKey() || 'auth.progress.restoring') | scTranslate }}
-                </p>
-              </div>
+      <section
+        class="identity"
+        data-testid="account-identity"
+        aria-live="polite"
+        [attr.aria-busy]="authState() === 'RESTORING' ? 'true' : null"
+      >
+        @if (authState() === 'RESTORING') {
+          <div class="identity-restoring">
+            <div class="avatar placeholder" aria-hidden="true">…</div>
+            <div class="identity-copy">
+              <p class="identity-name">{{ 'account.state.restoring' | scTranslate }}</p>
+              <p class="muted">
+                {{ (store.authProgressKey() || 'auth.progress.restoring') | scTranslate }}
+              </p>
             </div>
-          } @else if (connected()) {
-            @if (active(); as acc) {
-              <div class="identity-grid">
-                <div class="identity-main">
-                  <div class="avatar" aria-hidden="true">{{ initials(acc.minecraftUsername) }}</div>
-                  <div class="identity-copy">
-                    <p class="identity-name">{{ acc.minecraftUsername }}</p>
-                    <p class="status-line">
-                      <span class="dot ok" aria-hidden="true"></span>
-                      <span>{{ 'account.identity.mc_connected' | scTranslate }}</span>
-                    </p>
-                    <div class="pills">
-                      <span class="auth-pill">
-                        <span class="pill-mark ms" aria-hidden="true"></span>
-                        {{ 'account.ms.connected' | scTranslate }}
-                      </span>
-                      <span class="auth-pill">
-                        <span class="pill-mark mc" aria-hidden="true"></span>
-                        {{ 'account.mc.active' | scTranslate }}
-                      </span>
-                    </div>
+          </div>
+        } @else if (connected()) {
+          @if (active(); as acc) {
+            <div class="identity-grid">
+              <div class="identity-main">
+                <div class="avatar" aria-hidden="true">{{ initials(acc.minecraftUsername) }}</div>
+                <div class="identity-copy">
+                  <p class="identity-name">{{ acc.minecraftUsername }}</p>
+                  <p class="status-line">
+                    <span class="dot ok" aria-hidden="true"></span>
+                    <span>{{ 'account.identity.mc_connected' | scTranslate }}</span>
+                  </p>
+                  <div class="pills">
+                    <span class="auth-pill">
+                      <span class="pill-mark ms" aria-hidden="true"></span>
+                      {{ 'account.ms.connected' | scTranslate }}
+                    </span>
+                    <span class="auth-pill">
+                      <span class="pill-mark mc" aria-hidden="true"></span>
+                      {{ 'account.mc.active' | scTranslate }}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                <dl class="meta-col">
-                  <div class="meta-row">
-                    <dt>{{ 'account.meta.current' | scTranslate }}</dt>
-                    <dd>{{ acc.minecraftUsername }}</dd>
-                  </div>
-                  <div class="meta-row">
-                    <dt>{{ 'account.meta.session' | scTranslate }}</dt>
-                    <dd>{{ 'account.state.authenticated' | scTranslate }}</dd>
-                  </div>
-                  @if (lastUsedLabel(); as lastUsed) {
-                    <div class="meta-row">
-                      <dt>{{ 'account.last_used' | scTranslate }}</dt>
-                      <dd>{{ lastUsed }}</dd>
-                    </div>
-                  }
-                </dl>
-
-                <div class="identity-actions">
-                  <sc-button variant="secondary" (clicked)="scrollToSaved()">
-                    {{ 'account.manage' | scTranslate }}
-                  </sc-button>
-                  <sc-button
-                    variant="ghost"
-                    class="logout-btn"
-                    [disabled]="auth.isBusy()"
-                    (clicked)="logout(acc.accountId)"
-                  >
-                    {{ 'account.logout' | scTranslate }}
-                  </sc-button>
+              <dl class="meta-col">
+                <div class="meta-row">
+                  <dt>{{ 'account.meta.current' | scTranslate }}</dt>
+                  <dd>{{ acc.minecraftUsername }}</dd>
                 </div>
-              </div>
-            }
-          } @else {
-            <div class="identity-empty">
-              <div class="avatar placeholder" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                  <path
-                    fill="currentColor"
-                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                  />
-                </svg>
-              </div>
-              <div class="identity-copy">
-                <p class="identity-name">{{ 'home.account.none' | scTranslate }}</p>
-                <p class="muted">{{ 'account.identity.empty_body' | scTranslate }}</p>
-                @if (store.authError(); as err) {
-                  <p class="error" role="alert">{{ err.messageKey | scTranslate }}</p>
-                }
-              </div>
+                <div class="meta-row">
+                  <dt>{{ 'account.meta.session' | scTranslate }}</dt>
+                  <dd>{{ 'account.state.authenticated' | scTranslate }}</dd>
+                </div>
+                <div class="meta-row">
+                  <dt>{{ 'account.last_used' | scTranslate }}</dt>
+                  <dd>{{ lastUsedLabel() ?? ('account.last_used.unknown' | scTranslate) }}</dd>
+                </div>
+              </dl>
+
               <div class="identity-actions">
-                @if (authState() === 'REAUTH_REQUIRED') {
-                  <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="reconnect()">
-                    {{ 'cta.reauth' | scTranslate }}
-                  </sc-button>
-                } @else if (authState() === 'ERROR') {
-                  <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="login()">
-                    {{ 'cta.sign_in_microsoft' | scTranslate }}
-                  </sc-button>
-                  <sc-button variant="secondary" [disabled]="auth.isBusy()" (clicked)="retry()">
-                    {{ 'account.retry' | scTranslate }}
-                  </sc-button>
-                } @else {
-                  <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="login()">
-                    {{ 'cta.sign_in_microsoft' | scTranslate }}
-                  </sc-button>
-                }
+                <sc-button variant="secondary" (clicked)="scrollToSaved()">
+                  {{ 'account.manage' | scTranslate }}
+                </sc-button>
+                <sc-button
+                  variant="ghost"
+                  class="logout-btn"
+                  [disabled]="auth.isBusy()"
+                  (clicked)="logout(acc.accountId)"
+                >
+                  {{ 'account.logout' | scTranslate }}
+                </sc-button>
               </div>
             </div>
           }
-        </section>
-      </div>
+        } @else {
+          <div class="identity-empty">
+            <div class="avatar placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
+              </svg>
+            </div>
+            <div class="identity-copy">
+              <p class="identity-name">{{ 'home.account.none' | scTranslate }}</p>
+              <p class="muted">{{ 'account.identity.empty_body' | scTranslate }}</p>
+              @if (store.authError(); as err) {
+                <p class="error" role="alert">{{ err.messageKey | scTranslate }}</p>
+              }
+            </div>
+            <div class="identity-actions">
+              @if (authState() === 'REAUTH_REQUIRED') {
+                <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="reconnect()">
+                  {{ 'cta.reauth' | scTranslate }}
+                </sc-button>
+              } @else if (authState() === 'ERROR') {
+                <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="login()">
+                  {{ 'cta.sign_in_microsoft' | scTranslate }}
+                </sc-button>
+                <sc-button variant="secondary" [disabled]="auth.isBusy()" (clicked)="retry()">
+                  {{ 'account.retry' | scTranslate }}
+                </sc-button>
+              } @else {
+                <sc-button variant="primary" [disabled]="auth.isBusy()" (clicked)="login()">
+                  {{ 'cta.sign_in_microsoft' | scTranslate }}
+                </sc-button>
+              }
+            </div>
+          </div>
+        }
+      </section>
 
       <section class="cards" aria-label="Vue d'ensemble">
         <article class="card card-ms" data-testid="account-ms-card">
@@ -307,39 +291,6 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
           </div>
         </article>
       </section>
-
-      <section class="community" data-testid="account-community" aria-labelledby="account-community-title">
-        <div
-          class="community-art"
-          [style.background-image]="'url(' + communityUrl + ')'"
-          aria-hidden="true"
-        ></div>
-        <div class="community-copy">
-          <h2 id="account-community-title">{{ 'account.community.title' | scTranslate }}</h2>
-          <p class="muted">{{ 'account.community.body' | scTranslate }}</p>
-          <a class="site-btn" [href]="siteUrl" target="_blank" rel="noopener noreferrer">
-            {{ 'account.community.site' | scTranslate }}
-          </a>
-        </div>
-        <ul class="community-benefits">
-          <li>
-            <span class="pillar-icon" aria-hidden="true">✦</span>
-            {{ 'account.community.b1' | scTranslate }}
-          </li>
-          <li>
-            <span class="pillar-icon" aria-hidden="true">✦</span>
-            {{ 'account.community.b2' | scTranslate }}
-          </li>
-          <li>
-            <span class="pillar-icon" aria-hidden="true">✦</span>
-            {{ 'account.community.b3' | scTranslate }}
-          </li>
-          <li>
-            <span class="pillar-icon" aria-hidden="true">✦</span>
-            {{ 'account.community.b4' | scTranslate }}
-          </li>
-        </ul>
-      </section>
     </div>
   `,
   styles: [
@@ -351,72 +302,37 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: var(--sc-home-gap, 1.25rem);
       }
 
-      .hero-stage {
-        position: relative;
+      .page-head {
         display: flex;
         flex-direction: column;
-        gap: 0;
+        gap: var(--sc-space-2);
       }
 
-      /* Compact Account hero ~15–20% vs shared Home hero defaults (artwork preserved). */
-      .hero-stage ::ng-deep .hero {
-        min-height: clamp(21rem, 38vh, 26rem);
-      }
-
-      .hero-stage ::ng-deep .content {
-        max-width: min(34rem, 92%);
-        gap: var(--sc-space-3);
-        padding-top: clamp(1.25rem, 2.4vw, 2rem);
-        padding-bottom: clamp(5.25rem, 13vh, 8rem);
-      }
-
-      .hero-title {
+      .page-head h1 {
         margin: 0;
-        font-size: clamp(1.95rem, 3.6vw, 2.75rem);
+        font-size: clamp(1.65rem, 2.6vw, 2rem);
         font-weight: var(--sc-weight-bold);
-        letter-spacing: -0.03em;
-        line-height: 1.05;
-      }
-
-      .hero-script {
-        margin: 0;
-        font-size: clamp(1rem, 1.5vw, 1.28rem);
-        font-style: italic;
-        letter-spacing: 0.02em;
+        letter-spacing: -0.02em;
         color: var(--sc-text-primary);
-        opacity: 0.95;
       }
 
-      .hero-body {
+      .page-lead {
         margin: 0;
-        max-width: 28rem;
+        max-width: 36rem;
         color: var(--sc-text-secondary);
-        line-height: var(--sc-leading-relaxed);
         font-size: var(--sc-text-sm);
+        line-height: 1.45;
       }
 
       .identity {
-        position: relative;
-        z-index: 2;
-        margin: -4.35rem var(--sc-space-5) 0;
         padding: var(--sc-space-4) var(--sc-space-5);
         border-radius: var(--sc-radius-xl);
-        border: 1px solid rgba(196, 181, 253, 0.22);
-        background: rgba(18, 18, 28, 0.72);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        box-shadow:
-          var(--sc-shadow-card, 0 12px 40px rgba(0, 0, 0, 0.35)),
-          0 0 40px rgba(217, 27, 181, 0.12);
-      }
-
-      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-        .identity {
-          background: rgba(18, 18, 28, 0.94);
-        }
+        border: 1px solid var(--sc-border-default);
+        background: var(--sc-surface-2);
+        box-shadow: var(--sc-shadow-card);
       }
 
       .identity-grid {
@@ -447,16 +363,13 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         border-radius: var(--sc-radius-lg);
         display: grid;
         place-items: center;
-        background:
-          radial-gradient(circle at 35% 30%, rgba(232, 121, 249, 0.35), transparent 55%),
-          var(--sc-accent-soft);
+        background: var(--sc-accent-soft);
         border: 1px solid var(--sc-border-accent);
         font-weight: var(--sc-weight-bold);
         font-size: 1.05rem;
         letter-spacing: 0.04em;
         flex-shrink: 0;
-        box-shadow: 0 0 22px rgba(217, 27, 181, 0.22);
-        color: #f8f5ff;
+        color: var(--sc-text-accent);
       }
 
       .avatar.placeholder {
@@ -497,7 +410,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
 
       .dot.ok {
         background: var(--sc-success);
-        box-shadow: 0 0 8px rgba(46, 204, 113, 0.55);
+        box-shadow: 0 0 8px rgba(46, 204, 113, 0.45);
       }
 
       .pills {
@@ -513,7 +426,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         gap: 0.4rem;
         padding: 0.22rem 0.62rem;
         border-radius: var(--sc-radius-full);
-        border: 1px solid rgba(196, 181, 253, 0.22);
+        border: 1px solid var(--sc-border-default);
         background: rgba(255, 255, 255, 0.04);
         font-size: var(--sc-text-xs);
         font-weight: var(--sc-weight-medium);
@@ -548,7 +461,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         gap: var(--sc-space-2);
         padding: var(--sc-space-2) var(--sc-space-3);
         border-radius: var(--sc-radius-lg);
-        border: 1px solid rgba(196, 181, 253, 0.12);
+        border: 1px solid var(--sc-border-subtle);
         background: rgba(255, 255, 255, 0.03);
       }
 
@@ -578,7 +491,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         gap: var(--sc-space-3);
         margin-top: var(--sc-space-1);
         padding-top: var(--sc-space-3);
-        border-top: 1px solid rgba(196, 181, 253, 0.1);
+        border-top: 1px solid var(--sc-border-subtle);
       }
 
       .identity-empty .identity-actions,
@@ -636,8 +549,8 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         min-height: 14.5rem;
         padding: var(--sc-space-4) var(--sc-space-5);
         border-radius: var(--sc-radius-xl);
-        border: 1px solid rgba(196, 181, 253, 0.14);
-        background: rgba(18, 18, 28, 0.9);
+        border: 1px solid var(--sc-border-default);
+        background: var(--sc-surface-1);
         box-shadow: var(--sc-shadow-card);
       }
 
@@ -649,7 +562,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
       }
 
       .card-ms::before {
-        background: radial-gradient(ellipse 80% 55% at 0% 0%, rgba(138, 27, 217, 0.16), transparent 55%);
+        background: radial-gradient(ellipse 80% 55% at 0% 0%, rgba(56, 189, 248, 0.1), transparent 55%);
       }
 
       .card-security::before {
@@ -657,7 +570,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
       }
 
       .card-list::before {
-        background: radial-gradient(ellipse 80% 55% at 50% 100%, rgba(217, 27, 181, 0.12), transparent 55%);
+        background: radial-gradient(ellipse 80% 55% at 50% 100%, rgba(210, 167, 120, 0.1), transparent 55%);
       }
 
       .card-head {
@@ -674,21 +587,21 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         display: grid;
         place-items: center;
         flex-shrink: 0;
-        border: 1px solid rgba(196, 181, 253, 0.22);
-        background: rgba(168, 85, 247, 0.14);
-        color: #e9d5ff;
+        border: 1px solid var(--sc-border-accent);
+        background: var(--sc-accent-soft);
+        color: var(--sc-text-accent);
       }
 
       .card-icon.security {
-        background: rgba(245, 158, 11, 0.12);
-        border-color: rgba(245, 158, 11, 0.28);
+        background: var(--sc-warning-muted);
+        border-color: rgba(245, 158, 11, 0.35);
         color: #fbbf24;
       }
 
       .card-icon.accounts {
-        background: rgba(217, 27, 181, 0.12);
-        border-color: rgba(217, 27, 181, 0.28);
-        color: #f0abfc;
+        background: var(--sc-accent-soft);
+        border-color: var(--sc-border-accent);
+        color: var(--sc-text-accent);
       }
 
       .card h2 {
@@ -709,8 +622,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
 
       .status-rows,
       .tip-rows,
-      .account-rows,
-      .community-benefits {
+      .account-rows {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -732,7 +644,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         align-items: flex-start;
         padding: 0.55rem 0.7rem;
         border-radius: var(--sc-radius-md);
-        border: 1px solid rgba(196, 181, 253, 0.1);
+        border: 1px solid var(--sc-border-subtle);
         background: rgba(255, 255, 255, 0.03);
         font-size: var(--sc-text-sm);
         color: var(--sc-text-secondary);
@@ -743,7 +655,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         height: 1rem;
         margin-top: 0.1rem;
         border-radius: 50%;
-        border: 1.5px solid rgba(196, 181, 253, 0.35);
+        border: 1.5px solid var(--sc-border-default);
         flex-shrink: 0;
         position: relative;
       }
@@ -815,7 +727,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        color: #e9d5ff;
+        color: var(--sc-text-accent);
         font-size: var(--sc-text-sm);
         font-weight: var(--sc-weight-medium);
         text-decoration: none;
@@ -830,7 +742,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
       .ghost-link {
         padding: 0.45rem 0.85rem;
         border-radius: var(--sc-radius-md);
-        border: 1px solid rgba(196, 181, 253, 0.22);
+        border: 1px solid var(--sc-border-default);
         background: transparent;
         color: var(--sc-text-primary);
       }
@@ -838,7 +750,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
       .text-link:hover,
       .ghost-link:hover {
         text-decoration: none;
-        color: #f5d0fe;
+        color: var(--sc-accent-200);
       }
 
       .ghost-link:hover {
@@ -847,7 +759,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
 
       .text-link:focus-visible,
       .ghost-link:focus-visible {
-        outline: 2px solid rgba(192, 132, 252, 0.85);
+        outline: 2px solid var(--sc-border-accent);
         outline-offset: 3px;
       }
 
@@ -862,7 +774,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
       .empty-state {
         padding: var(--sc-space-3);
         border-radius: var(--sc-radius-md);
-        border: 1px dashed rgba(196, 181, 253, 0.22);
+        border: 1px dashed var(--sc-border-default);
         background: rgba(255, 255, 255, 0.02);
         text-align: center;
         position: relative;
@@ -879,13 +791,13 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         gap: var(--sc-space-3);
         padding: 0.65rem 0.75rem;
         border-radius: var(--sc-radius-md);
-        border: 1px solid rgba(196, 181, 253, 0.12);
+        border: 1px solid var(--sc-border-subtle);
         background: rgba(255, 255, 255, 0.03);
       }
 
       .account-rows li.is-active {
-        border-color: rgba(56, 189, 248, 0.35);
-        box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.08);
+        border-color: rgba(210, 167, 120, 0.4);
+        box-shadow: inset 0 0 0 1px rgba(210, 167, 120, 0.08);
       }
 
       .row-avatar {
@@ -899,6 +811,7 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         font-size: 0.7rem;
         font-weight: var(--sc-weight-bold);
         flex-shrink: 0;
+        color: var(--sc-text-accent);
       }
 
       .row-meta {
@@ -936,84 +849,6 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         gap: var(--sc-space-2);
       }
 
-      .community {
-        display: grid;
-        grid-template-columns: minmax(9rem, 0.85fr) minmax(0, 1.35fr) minmax(11rem, 0.9fr);
-        gap: var(--sc-space-6);
-        align-items: center;
-        padding: var(--sc-space-5);
-        border-radius: var(--sc-radius-xl);
-        border: 1px solid rgba(196, 181, 253, 0.16);
-        background:
-          radial-gradient(ellipse 50% 80% at 0% 50%, rgba(217, 27, 181, 0.14), transparent 60%),
-          linear-gradient(120deg, rgba(18, 18, 28, 0.95), rgba(40, 16, 48, 0.78));
-        box-shadow: var(--sc-shadow-card);
-      }
-
-      .community-art {
-        width: 100%;
-        min-height: 8rem;
-        height: 100%;
-        border-radius: var(--sc-radius-lg);
-        background-color: #12121c;
-        background-size: cover;
-        background-position: center;
-        border: 1px solid var(--sc-border-subtle);
-        box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
-      }
-
-      .community-copy h2 {
-        margin: 0 0 var(--sc-space-2);
-        font-size: var(--sc-text-xl);
-        font-weight: var(--sc-weight-bold);
-        letter-spacing: -0.02em;
-      }
-
-      .site-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: var(--sc-space-4);
-        padding: 0.55rem 1rem;
-        border-radius: var(--sc-radius-md);
-        border: 1px solid transparent;
-        background: var(--sc-accent-gradient);
-        box-shadow: var(--sc-shadow-accent);
-        color: var(--sc-text-primary);
-        font-size: var(--sc-text-sm);
-        font-weight: var(--sc-weight-medium);
-        text-decoration: none;
-      }
-
-      .site-btn:hover {
-        filter: brightness(1.06);
-        text-decoration: none;
-      }
-
-      .community-benefits li {
-        display: flex;
-        align-items: center;
-        gap: var(--sc-space-2);
-        padding: 0.6rem 0.85rem;
-        border-radius: var(--sc-radius-md);
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(196, 181, 253, 0.12);
-        font-size: var(--sc-text-sm);
-        color: var(--sc-text-secondary);
-      }
-
-      .pillar-icon {
-        color: var(--sc-text-accent);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .identity {
-          backdrop-filter: none;
-          -webkit-backdrop-filter: none;
-          background: rgba(18, 18, 28, 0.94);
-        }
-      }
-
       @media (max-width: 1279px) {
         .cards {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1022,32 +857,14 @@ const COMMUNITY_URL = ACCOUNT_ASSETS.community;
         .card-list {
           grid-column: 1 / -1;
         }
-
-        .community {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .community-art {
-          min-height: 10rem;
-          grid-column: 1 / -1;
-        }
       }
 
       @media (max-width: 900px) {
-        .identity {
-          margin: -3.5rem var(--sc-space-3) 0;
-        }
-
         .identity-grid {
           grid-template-columns: 1fr;
         }
 
-        .hero-stage ::ng-deep .content {
-          padding-bottom: clamp(4.5rem, 12vh, 7rem);
-        }
-
-        .cards,
-        .community {
+        .cards {
           grid-template-columns: 1fr;
         }
 
@@ -1068,10 +885,6 @@ export class AccountPageComponent {
   protected readonly store = inject(AppStore);
   protected readonly auth = inject(AuthActionsService);
   private readonly modal = inject(ModalService);
-
-  readonly siteUrl = SITE_URL;
-  readonly heroUrl = HERO_URL;
-  readonly communityUrl = COMMUNITY_URL;
 
   readonly active = this.store.activeAccount;
   readonly authState = this.store.effectiveAuthState;

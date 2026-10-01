@@ -11,13 +11,21 @@ export {
   LAUNCHER_DATA_DIR_NAME,
   DEFAULT_INSTANCE_ID,
   LEGACY_CLI_DATA_DIR_NAME,
+  FOREIGN_SWEETCRAFT_USER_DATA_DIR_NAME,
+  FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME,
   ENV_LAUNCHER_DATA_DIR,
+  LEGACY_SWEETCRAFT_ENV_LAUNCHER_DATA_DIR,
+  ForeignSweetCraftDataPathError,
   resolveProductUserDataRoot,
   resolveCanonicalLauncherDataDir,
   resolveLegacyLauncherDataDir,
+  resolveForeignSweetCraftRoots,
   resolveLauncherDataRoot,
   launcherDataDirHasProductMarkers,
   migrateLegacyLauncherDataIfNeeded,
+  isUnderForeignSweetCraftRoot,
+  assertNotForeignSweetCraftDataPath,
+  foreignSweetCraftRootsBesideProductUserData,
   defaultSecureStoreRoot,
   defaultLogsRoot,
   defaultSettingsPath
@@ -48,8 +56,8 @@ export type { ProductDataPathOptions, ResolvedLauncherDataRoot, LauncherDataRoot
 
 /**
  * Default launcher managed data directory (canonical product layout).
- * Windows: %APPDATA%\SweetCraft Launcher\launcher-data
- * Honors SWEETCRAFT_LAUNCHER_DATA_DIR and legacy fallback (see productData.ts).
+ * Windows: %APPDATA%\PaxCraft Launcher\launcher-data
+ * Honors PAXCRAFT_LAUNCHER_DATA_DIR only (see productData.ts). Never SweetCraft roots.
  */
 export function defaultLauncherDataDir(opts?: ProductDataPathOptions): string {
   return resolveLauncherDataRoot(opts).dataDir;
@@ -63,7 +71,7 @@ export function accountsStatePath(dataDir: string = defaultLauncherDataDir()): s
   return path.join(dataDir, "state", "accounts.json");
 }
 
-/** Default SweetCraft game instance root (isolated; never implicit .minecraft). */
+/** Default PaxCraft game instance root (isolated; never implicit .minecraft). */
 export function defaultInstanceRoot(dataDir: string = defaultLauncherDataDir()): string {
   return instanceRootUnder(dataDir);
 }

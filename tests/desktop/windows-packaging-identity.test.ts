@@ -14,11 +14,11 @@ function readYamlish(filePath: string): string {
 }
 
 describe("PACK-04 Windows packaging identity", () => {
-  it("A. electron-builder carries required product identity", () => {
+  it("A. electron-builder carries required Pax product identity", () => {
     const yml = readYamlish(path.join(ROOT, "electron-builder.yml"));
-    assert.match(yml, /^appId:\s*fr\.xbase\.sweetcraft\.launcher\s*$/m);
-    assert.match(yml, /^productName:\s*SweetCraft Launcher\s*$/m);
-    assert.match(yml, /^executableName:\s*SweetCraft Launcher\s*$/m);
+    assert.match(yml, /^appId:\s*org\.paxhorizon\.paxcraft\.launcher\s*$/m);
+    assert.match(yml, /^productName:\s*PaxCraft Launcher\s*$/m);
+    assert.match(yml, /^executableName:\s*PaxCraft Launcher\s*$/m);
     assert.match(yml, /artifactName:\s*\$\{productName\}-\$\{version\}-win-\$\{arch\}-setup\.\$\{ext\}/);
     assert.match(yml, /perMachine:\s*false/);
     assert.match(yml, /createDesktopShortcut:\s*true/);
@@ -26,8 +26,11 @@ describe("PACK-04 Windows packaging identity", () => {
     assert.match(yml, /icon:\s*build\/icon\.ico/);
     assert.match(yml, /installerIcon:\s*build\/icon\.ico/);
     assert.match(yml, /uninstallerIcon:\s*build\/icon\.ico/);
-    assert.match(yml, /uninstallDisplayName:\s*SweetCraft Launcher/);
+    assert.match(yml, /uninstallDisplayName:\s*PaxCraft Launcher/);
+    assert.match(yml, /shortcutName:\s*PaxCraft Launcher/);
+    assert.match(yml, /deleteAppDataOnUninstall:\s*false/);
     assert.doesNotMatch(yml, /perMachine:\s*true/);
+    assert.doesNotMatch(yml, /fr\.xbase\.sweetcraft\.launcher/);
   });
 
   it("B. Windows icon assets exist with multi-size ICO header", () => {
@@ -46,9 +49,15 @@ describe("PACK-04 Windows packaging identity", () => {
     assert.ok(ico.readUInt16LE(4) >= 7, `expected >=7 icon images, got ${ico.readUInt16LE(4)}`);
   });
 
-  it("C. AppUserModelID remains single-sourced in main", () => {
+  it("C. AppUserModelID remains single-sourced in main + product constant", () => {
     const main = fs.readFileSync(path.join(ROOT, "desktop", "main", "main.ts"), "utf8");
-    assert.match(main, /app\.setAppUserModelId\(\s*"fr\.xbase\.sweetcraft\.launcher"\s*\)/);
+    assert.match(main, /DESKTOP_APP_USER_MODEL_ID/);
+    assert.doesNotMatch(main, /fr\.xbase\.sweetcraft\.launcher/);
+    const product = fs.readFileSync(path.join(ROOT, "desktop", "shared", "product.ts"), "utf8");
+    assert.match(
+      product,
+      /DESKTOP_APP_USER_MODEL_ID\s*=\s*"org\.paxhorizon\.paxcraft\.launcher"/
+    );
   });
 
   it("D. package.json version remains the installer SemVer source (0.6.0-rc.18)", () => {
@@ -61,10 +70,10 @@ describe("PACK-04 Windows packaging identity", () => {
     assert.equal(pkg.version, "0.6.0-rc.18");
     assert.equal(pkg.shortVersion, "0.6.0.18");
     assert.equal(pkg.shortVersionWindows, "0.6.0.18");
-    assert.ok(pkg.description.includes("SweetCraft Launcher"));
+    assert.ok(pkg.description.includes("PaxCraft Launcher"));
   });
 
-  it("D2. PACK-12C PE CompanyName branding is SweetCraft / XBASE (not GitHub, Inc.)", () => {
+  it("D2. PACK-12C PE CompanyName branding remains SweetCraft / XBASE (rights; not Authenticode)", () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")) as {
       author?: string | { name?: string; email?: string; url?: string };
     };
@@ -76,9 +85,9 @@ describe("PACK-04 Windows packaging identity", () => {
     const yml = readYamlish(path.join(ROOT, "electron-builder.yml"));
     assert.match(yml, /SweetCraft \/ XBASE/);
     assert.doesNotMatch(yml, /GitHub,\s*Inc/);
-    assert.match(yml, /^appId:\s*fr\.xbase\.sweetcraft\.launcher\s*$/m);
-    assert.match(yml, /^productName:\s*SweetCraft Launcher\s*$/m);
-    assert.match(yml, /^executableName:\s*SweetCraft Launcher\s*$/m);
+    assert.match(yml, /^appId:\s*org\.paxhorizon\.paxcraft\.launcher\s*$/m);
+    assert.match(yml, /^productName:\s*PaxCraft Launcher\s*$/m);
+    assert.match(yml, /^executableName:\s*PaxCraft Launcher\s*$/m);
   });
 
   it("E. PACK-05 product default channel is dev (CDN publishes only dev today)", async () => {

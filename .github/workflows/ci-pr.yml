@@ -1,0 +1,60 @@
+﻿# Pax Horizon â€” CI PR (validation only)
+# Origin: reconstructed from docs/CI.md + package.json scripts + PACK-12G.1 contracts
+# (historical SweetCraft workflow YAMLs not available locally). PACK-PAX-03.1.
+# No publication, no NSIS packaging, no SweetCraft infra secrets.
+
+name: CI PR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install launcher dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install UI dependencies
+        run: pnpm --dir ui install --frozen-lockfile
+
+      - name: Version check
+        run: pnpm version:check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Full test suite
+        run: pnpm test
+        env:
+          # Hermetic data root â€” never real SweetCraft APPDATA on the runner.
+          PAXCRAFT_LAUNCHER_DATA_DIR: ${{ runner.temp }}/pax-launcher-data
+
+      - name: Desktop shared build
+        run: pnpm desktop:shared:build
+
+      - name: Desktop UI build
+        run: pnpm desktop:ui:build

@@ -28,7 +28,7 @@ test('non-empty location error maps to French copy', () => {
 test('ownership not proven error maps to French copy', () => {
   const key = resolveErrorMessageKey('INSTANCE_OWNERSHIP_NOT_PROVEN');
   assert.equal(key, 'error.instance.location.ownership_not_proven');
-  assert.match(translate(key), /SweetCraft/i);
+  assert.match(translate(key), /PaxCraft/i);
 });
 
 test('LOCATION_UNAVAILABLE install card uses explicit unavailable copy', () => {

@@ -14,7 +14,7 @@ import {
 export { ROOT };
 
 export const RELEASE_MANIFEST_SCHEMA_VERSION = 1 as const;
-export const RELEASE_PRODUCT_NAME = "SweetCraft Launcher";
+export const RELEASE_PRODUCT_NAME = "PaxCraft Launcher";
 export const RELEASE_PLATFORM = "win32" as const;
 export const RELEASE_ARCH = "x64" as const;
 export const RELEASE_SIGNING_STATUS = "unsigned" as const;

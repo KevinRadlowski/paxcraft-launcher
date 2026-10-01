@@ -4,14 +4,22 @@ export {
   WINDOWS_PRERELEASE_MAPPING_POLICY
 } from "./version.generated.js";
 
-export const DESKTOP_PRODUCT_NAME = "SweetCraft Launcher";
+export const DESKTOP_PRODUCT_NAME = "PaxCraft Launcher";
+
+/** Windows AppUserModelId — keep in sync with electron-builder.yml appId. */
+export const DESKTOP_APP_USER_MODEL_ID = "org.paxhorizon.paxcraft.launcher";
 
 /**
- * Default SweetCraft distribution channel for packaged Desktop install/play.
- * Production CDN currently publishes `dev` (0.1.3 / seq 4); `stable`/`beta` are absent.
- * Must stay aligned with live E2E / PACK-05 expectations until channel UX ships.
+ * Default distribution channel for packaged Desktop install/play.
+ * Inherited SweetCraft CDN still publishes `dev` only — network/distribution Pax is a later lot.
+ * Must stay aligned until channel UX / Pax origin ships.
  */
 export const PRODUCT_DEFAULT_CHANNEL = "dev" as const;
 
-/** Official community website (not CDN). Keep in sync with UI product-links + EXTERNAL_URL allowlist. */
-export const SWEETCRAFT_WEBSITE_URL = "https://www.xnosweet.fr/sweetcraft";
+/**
+ * Official community website (not CDN).
+ * PACK-PAX-05: unset until Pax endpoints are qualified — no SweetCraft fallback.
+ * Keep in sync with UI product-links + EXTERNAL_URL allowlist (empty).
+ */
+export const SWEETCRAFT_WEBSITE_URL: string | null = null;
+export const PAX_COMMUNITY_WEBSITE_URL: string | null = null;

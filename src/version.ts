@@ -10,4 +10,4 @@ export {
   WINDOWS_PRERELEASE_MAPPING_POLICY
 } from "./version.generated.js";
 
-export const PRODUCT_NAME = "SweetCraft Launcher";
+export const PRODUCT_NAME = "PaxCraft Launcher";

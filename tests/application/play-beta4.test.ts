@@ -28,7 +28,8 @@ import {
   mountOrchBundle,
   createPlayTestEnv,
   buildPlayDeps,
-  seedAccountA
+  seedAccountA,
+  testNetworkPolicy
 } from "../../fixtures/playHarness.js";
 
 const workerPath = fileURLToPath(
@@ -198,7 +199,8 @@ describe("0.5.0-beta.4 cross-process GameProcessLock", { concurrency: 1 }, () =>
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);
@@ -232,7 +234,8 @@ describe("0.5.0-beta.4 cross-process GameProcessLock", { concurrency: 1 }, () =>
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
 
@@ -279,7 +282,8 @@ describe("0.5.0-beta.4 cross-process GameProcessLock", { concurrency: 1 }, () =>
             trust: bundle.trust,
             artefactSource: source,
             antiRollbackStore: built.deps.antiRollbackStore,
-            antiRollbackState: built.deps.antiRollbackState
+            antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
           }
         ),
       (e: unknown) => e instanceof LauncherError && e.code === ErrorCode.GAME_ALREADY_RUNNING

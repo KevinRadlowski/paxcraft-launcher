@@ -1,6 +1,6 @@
-/**
- * PACK-12G — version:generate sync must not falsely dirty a clean release checkout.
- * Root cause: unconditional JSON/YAML rewrite flipped CRLF→LF on Windows CI.
+﻿/**
+ * PACK-12G â€” version:generate sync must not falsely dirty a clean release checkout.
+ * Root cause: unconditional JSON/YAML rewrite flipped CRLFâ†’LF on Windows CI.
  */
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -55,7 +55,7 @@ describe("PACK-12G idempotent version sync (no false dirty)", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "sc-sync-yml-"));
     try {
       const ymlPath = path.join(dir, "electron-builder.yml");
-      const body = `buildVersion: ${info.windowsVersion}\r\nappId: fr.xbase.sweetcraft.launcher\r\n`;
+      const body = `buildVersion: ${info.windowsVersion}\r\nappId: org.paxhorizon.paxcraft.launcher\r\n`;
       fs.writeFileSync(ymlPath, body, "utf8");
       const before = fs.readFileSync(ymlPath);
       assert.equal(syncElectronBuilderBuildVersion(dir, info), false);

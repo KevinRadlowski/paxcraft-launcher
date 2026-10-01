@@ -67,12 +67,24 @@ export type ScButtonSize = 'sm' | 'md' | 'lg';
 
       .primary {
         background: var(--sc-accent-gradient);
-        color: var(--sc-text-primary);
+        color: var(--sc-bg-app);
         box-shadow: var(--sc-shadow-glow);
       }
 
       .primary:not(:disabled):hover {
-        filter: brightness(1.08);
+        filter: brightness(1.06);
+        color: var(--sc-bg-app);
+      }
+
+      .primary:focus-visible {
+        outline: 2px solid var(--sc-accent-300);
+        outline-offset: 2px;
+        color: var(--sc-bg-app);
+      }
+
+      .primary:disabled {
+        color: var(--sc-bg-app);
+        opacity: 0.45;
       }
 
       .secondary {

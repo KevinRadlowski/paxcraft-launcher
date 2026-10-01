@@ -4,6 +4,7 @@ import {
   sanitizeAuthHttpRequest,
   AUTH_REDACTED
 } from "../redaction.js";
+import { assertRealOutboundTransportAllowed } from "../../product/paxNetworkConfig.js";
 
 /**
  * Auth HTTP request — body is SENSITIVE BY DEFAULT.
@@ -139,12 +140,18 @@ class AuthRequestSession {
  */
 export class FetchAuthHttpTransport implements AuthHttpTransport {
   private readonly fetchImpl: AuthFetchLike;
+  private readonly realOutbound: boolean;
 
   constructor(opts: { fetchImpl?: AuthFetchLike } = {}) {
+    this.realOutbound = opts.fetchImpl === undefined;
     this.fetchImpl = opts.fetchImpl ?? fetch;
   }
 
   async request(req: AuthHttpRequest): Promise<AuthHttpResponse> {
+    // Injected fetchImpl = hermetic harness; default fetch = real outbound (blocked).
+    if (this.realOutbound) {
+      assertRealOutboundTransportAllowed();
+    }
     assertHttpsUrl(req.url);
     const timeoutMs = req.timeoutMs ?? DEFAULT_AUTH_TIMEOUT_MS;
     const maxBytes = req.maxBytes ?? DEFAULT_AUTH_MAX_BYTES;

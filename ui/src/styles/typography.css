@@ -1,18 +1,8 @@
 :root {
   --sc-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --sc-font-display: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  /*
-   * SCRIPT_FONT_ASSET_REQUIRED
-   * Deferred to global 0.6F polish. Future local WOFF2 must:
-   * - support French accents
-   * - open/commercially distributable license
-   * - premium handwritten editorial lettering (not childish, not generic italic)
-   * - never load remotely
-   * Apply only to decorative phrases (.sc-script), never body/UI.
-   */
-  --sc-font-display-script:
-    'SweetCraft Script', 'Segoe Script', 'Lucida Handwriting', 'Apple Chancery', cursive,
-    var(--sc-font-sans);
+  /* PACK-PAX-07: no handwritten/script display — system UI only */
+  --sc-font-display-script: var(--sc-font-sans);
   --sc-font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
 
   --sc-text-xs: 0.75rem;
@@ -109,8 +99,8 @@ p {
 }
 
 .sc-script {
-  font-family: var(--sc-font-display-script);
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-family: var(--sc-font-sans);
+  font-style: normal;
+  font-weight: var(--sc-weight-medium);
+  letter-spacing: 0.01em;
 }

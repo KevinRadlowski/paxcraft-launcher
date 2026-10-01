@@ -1,5 +1,5 @@
 /**
- * 0.6F.4 V2 Settings premium — asset / website contracts (no node:fs).
+ * PACK-PAX-08/09 Settings visual / presentation contracts (no node:fs).
  */
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
@@ -13,13 +13,18 @@ import { SWEETCRAFT_WEBSITE_URL } from '../../core/product-links';
 import { diskUsedPercent, memoryUsedPercent } from './settings-memory';
 import fr from '../../../assets/i18n/fr.json';
 
-describe('0.6F.4 Settings visual / asset contracts', () => {
-  it('website constant is official site (not CDN)', () => {
-    assert.equal(SWEETCRAFT_WEBSITE_URL, 'https://www.xnosweet.fr/sweetcraft');
-    assert.doesNotMatch(SWEETCRAFT_WEBSITE_URL, /cdn\.xnosweet/);
+describe('PACK-PAX-08/09 Settings visual / presentation contracts', () => {
+  it('website constant unset until Pax links are qualified (not CDN)', () => {
+    assert.equal(SWEETCRAFT_WEBSITE_URL, null);
   });
 
-  it('dedicated Settings assets distinct from Home/Account heroes', () => {
+  /**
+   * Inventaire résiduel (assets toujours livrés sous assets/settings/, page sans hero) :
+   * garantit unicité des URLs et distinction Home/Account — évite une fusion accidentelle
+   * des chemins branding SweetCraft historiques encore présents sur disque.
+   * Ne prouve pas que la page monte ces images.
+   */
+  it('residual Settings asset URLs stay unique and distinct from Home/Account heroes', () => {
     assert.equal(settingsAssetUrlsAreUnique(), true);
     assert.notEqual(SETTINGS_ASSETS.hero, HOME_HERO_ASSET);
     assert.notEqual(SETTINGS_ASSETS.hero, ACCOUNT_HERO_ASSET);
@@ -34,12 +39,16 @@ describe('0.6F.4 Settings visual / asset contracts', () => {
     assert.equal(typeof diskUsedPercent, 'function');
   });
 
-  it('V3 multi-disk i18n keys present', () => {
+  it('Pax presentation labels replace SweetCraft Premium / drive copy', () => {
     const messages = fr as Record<string, string>;
+    assert.equal(messages['settings.hero.body'], 'Les réglages utiles, sans détour.');
+    assert.notEqual(messages['settings.interface.mode_value'], 'SweetCraft Premium');
     assert.equal(messages['settings.system.storage'], 'STOCKAGE');
     assert.equal(messages['settings.system.ram_used'], 'RAM utilisée');
-    assert.equal(messages['settings.system.sweetcraft_drive'], 'Disque SweetCraft');
+    assert.equal(messages['settings.system.sweetcraft_drive'], 'Disque PaxCraft');
+    assert.equal(messages['settings.system.sweetcraft_pill'], 'PAXCRAFT');
     assert.match(messages['settings.system.used_pct'] ?? '', /\{pct\}/);
+    assert.equal(messages['settings.about.brand_value'], 'PaxCraft / Pax Horizon');
     assert.equal(messages['error.network'], 'Erreur réseau.');
     assert.equal(messages['error.network.pack_check'], 'Vérification du pack impossible.');
     assert.equal(messages['error.install.status_network'], 'Impossible de vérifier la version du pack.');

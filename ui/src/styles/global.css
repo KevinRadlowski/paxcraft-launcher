@@ -15,9 +15,8 @@ body {
 
 body {
   background:
-    radial-gradient(ellipse 70% 45% at 12% -8%, rgba(138, 27, 217, 0.16), transparent 55%),
-    radial-gradient(ellipse 55% 40% at 92% 108%, rgba(217, 27, 181, 0.1), transparent 50%),
-    radial-gradient(ellipse 40% 30% at 70% 20%, rgba(88, 28, 135, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 45% at 10% -8%, rgba(210, 167, 120, 0.08), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 92% 108%, rgba(43, 55, 73, 0.45), transparent 50%),
     var(--sc-bg-app);
 }
 

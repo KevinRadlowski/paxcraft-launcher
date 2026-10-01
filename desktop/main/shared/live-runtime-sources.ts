@@ -64,8 +64,18 @@ export async function createLiveRuntimeSources(
   };
 }
 
-export async function loadDefaultProductBase(distRoot: string): Promise<string> {
-  const href = pathToFileURL(path.join(distRoot, "distribution", "urls", "index.js")).href;
-  const mod = await import(href);
-  return mod.DEFAULT_PRODUCT_BASE as string;
+export async function loadDefaultProductBase(distRoot: string): Promise<string | null> {
+  try {
+    const href = pathToFileURL(path.join(distRoot, "product", "paxNetworkConfig.js")).href;
+    const mod = (await import(href)) as {
+      tryResolveDistributionOrigin?: () => string | null;
+    };
+    if (typeof mod.tryResolveDistributionOrigin === "function") {
+      return mod.tryResolveDistributionOrigin();
+    }
+  } catch {
+    // fall through
+  }
+  // PACK-PAX-05: never fall back to historical SweetCraft DEFAULT_PRODUCT_BASE.
+  return null;
 }

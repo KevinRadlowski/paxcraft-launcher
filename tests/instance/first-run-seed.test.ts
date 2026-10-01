@@ -10,8 +10,6 @@ import {
   FIRST_RUN_SEED_OPTIONS,
   FIRST_RUN_SEED_SERVERS,
   SWEETCRAFT_DEFAULT_LANG,
-  SWEETCRAFT_SERVER_ADDRESS,
-  SWEETCRAFT_SERVER_NAME,
   applyFirstRunSeeds,
   encodeServersDat,
   parseOptionsTxt,
@@ -72,7 +70,7 @@ describe("first-run fresh (absent files)", () => {
     assert.ok(!packs.some(p => p.includes("Faithful")));
   });
 
-  it("absent servers → SweetCraft seeded", async () => {
+  it("absent servers → empty list when Pax server unset (no SweetCraft seed)", async () => {
     const { paths } = await tmpInstance();
     await applyFirstRunSeeds({
       paths,
@@ -80,9 +78,7 @@ describe("first-run fresh (absent files)", () => {
       managedFiles: MANAGED
     });
     const servers = parseServersDat(await readFile(paths.absoluteForRelative("servers.dat")));
-    assert.equal(servers.length, 1);
-    assert.equal(servers[0]!.name, SWEETCRAFT_SERVER_NAME);
-    assert.equal(servers[0]!.ip, SWEETCRAFT_SERVER_ADDRESS);
+    assert.equal(servers.length, 0);
   });
 });
 

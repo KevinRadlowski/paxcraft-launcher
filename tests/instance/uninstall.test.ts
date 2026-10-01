@@ -278,7 +278,7 @@ describe("PACK-10.1F.1 complete uninstall", () => {
 });
 
 describe("PACK-10.1F.1 path guard", () => {
-  it("assertCompleteUninstallTarget accepts only canonical sweetcraft instance root", async () => {
+  it("assertCompleteUninstallTarget accepts only canonical paxcraft instance root", async () => {
     const { launcherDataRoot, paths } = await tmpCanonicalLayout();
     const ctx = {
       canonicalInstanceRoot: defaultInstanceRoot(launcherDataRoot),
@@ -287,6 +287,6 @@ describe("PACK-10.1F.1 path guard", () => {
       runtimeRoot: defaultRuntimeRoot(launcherDataRoot)
     };
     assert.doesNotThrow(() => assertCompleteUninstallTarget(paths, ctx));
-    assert.equal(DEFAULT_INSTANCE_ID, "sweetcraft");
+    assert.equal(DEFAULT_INSTANCE_ID, "paxcraft");
   });
 });

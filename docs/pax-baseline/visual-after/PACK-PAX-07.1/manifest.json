@@ -1,0 +1,224 @@
+{
+  "lot": "PACK-PAX-07.1",
+  "capturedAt": "2026-10-01T12:19:16.862Z",
+  "gitHead": "33499137b02a3057f3891b978a8b484f06d44c57",
+  "wipNote": "WIP PACK-PAX-03..07.1 present (uncommitted). Captures reflect PACK-PAX-07.1 polish + isolated fixtures.",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "viewportNarrow": {
+    "width": 1100,
+    "height": 700
+  },
+  "deviceScaleFactor": 1,
+  "browser": {
+    "product": "Google Chrome (system, CDP headless)",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "headless": true
+  },
+  "gateway": "DevLauncherDesktopGateway (ng serve development, no preload)",
+  "rendererBase": "http://127.0.0.1:4202",
+  "networkPolicy": {
+    "allow": [
+      "127.0.0.1",
+      "localhost",
+      "data:",
+      "blob:"
+    ],
+    "blockedExternalCount": 1,
+    "blockedExternalSamples": [
+      "https://example.com/"
+    ],
+    "mechanism": "CDP Fetch.failRequest for non-loopback"
+  },
+  "scenes": [
+    {
+      "id": "01-home-not-installed",
+      "route": "/home",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": null
+      },
+      "note": "Accueil initial sans pack",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "01-home-not-installed.png",
+      "sha256": "5e5d7f7457edabf12429fd2ac5b88d8ce29d781565d2cab5fbdea36d503288e2",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "02-home-installed-ready",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Accueil avec pack installé (fixture READY)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "02-home-installed-ready.png",
+      "sha256": "a47dc65c0e46c23e2e829dec2441398516260a1b71ad7a28f53629efc214148d",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "03-home-install-busy",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "BUSY",
+        "action": null
+      },
+      "note": "Progression installation (fixture BUSY / INSTALLING)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "03-home-install-busy.png",
+      "sha256": "a0f1adf583543d20232487066296d533f84a7f69794a673730e03fd979b6b5b0",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "04-home-update-available",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "UPDATE_AVAILABLE",
+        "action": null
+      },
+      "note": "Update disponible (fixture readiness)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "04-home-update-available.png",
+      "sha256": "f1729886c52e43bbbb3af48ea6d4ec1a3f6b987a0e3ff403d8e0e92e6cc0ad7f",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "05-home-repair-required",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "REPAIR_REQUIRED",
+        "action": null
+      },
+      "note": "Repair requis (fixture)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "05-home-repair-required.png",
+      "sha256": "0d66c63028479c2029626a61ff2f5f7d52a8f31b73e85edd11e96329ede62173",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "06-home-install-error",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "NETWORK_ERROR",
+        "action": "trigger-install-error"
+      },
+      "note": "Erreur d'installation (fixture NETWORK_ERROR + tentative install)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "06-home-install-error.png",
+      "sha256": "edfd24c6e3e06c832e6696463d59bee9646c5d2ac9584055f59d28aa62752ad2",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "07-account-signed-out",
+      "route": "/account",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": null
+      },
+      "note": "Compte déconnecté",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "07-account-signed-out.png",
+      "sha256": "4e086f84af8217ef1a92760f155c5afadeb001d1a2dcc83dcadb93a135a021f4",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "08-account-authenticated",
+      "route": "/account",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Compte connecté fictif",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "08-account-authenticated.png",
+      "sha256": "30d549b9710b0fe755daa53ce56f710cb110ccc3b2dee70bbf31d8d868520cc8",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "09-settings",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Paramètres",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "09-settings.png",
+      "sha256": "4d3ff499a62b01d93b3784e4445e276de7de2c08177ed5abb8531268f2d1ece8",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "10-home-network-unconfigured",
+      "route": "/home",
+      "fixture": {
+        "auth": "SIGNED_OUT",
+        "install": "NOT_INSTALLED",
+        "action": null
+      },
+      "note": "Serveur non configuré (présentation)",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "10-home-network-unconfigured.png",
+      "sha256": "5e5d7f7457edabf12429fd2ac5b88d8ce29d781565d2cab5fbdea36d503288e2",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "11-home-uninstall-modal",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-uninstall-modal"
+      },
+      "note": "Modal confirmation désinstallation",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "11-home-uninstall-modal.png",
+      "sha256": "386a673f82f60a4182cf5ec7c6728cafa93e99f13cb03bd144d58a3a90570b8a",
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "12-home-ready-narrow",
+      "route": "/home",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Viewport réduit 1100×700",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "12-home-ready-narrow.png",
+      "sha256": "d4803a4bb2f22365a752d9f223e8343f4edfa44e4a51ca1214d5b13ce2115874",
+      "blockedExternalHits": 0
+    }
+  ],
+  "notCapturedMidFlightUpdateRepair": "Dev gateway install phases use ~20ms delays — mid-flight update/repair animation not separately frozen; readiness fixtures captured instead.",
+  "limits": [
+    "Captures navigateur du renderer Angular — ne qualifient pas Electron ni chrome Windows.",
+    "Fixtures Dev gateway uniquement.",
+    "Référence post PACK-PAX-07 (shell + accueil).",
+    "Aucun package npm ajouté; Chrome système + CDP natif Node."
+  ]
+}

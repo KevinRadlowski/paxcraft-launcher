@@ -1,10 +1,10 @@
-/**
- * PACK-07A — packaged renderer bootstrap smoke (CDP).
+﻿/**
+ * PACK-07A â€” packaged renderer bootstrap smoke (CDP).
  *
  * Success requires real Angular bootstrap, not merely index.html presence.
  *
  * Usage:
- *   PACK07_EXE="<path to SweetCraft Launcher.exe>" pnpm exec tsx scripts/pack07-renderer-smoke.mts
+ *   PACK07_EXE="<path to PaxCraft Launcher.exe>" pnpm exec tsx scripts/pack07-renderer-smoke.mts
  *
  * Defaults to release/win-unpacked executable when PACK07_EXE unset.
  */
@@ -19,7 +19,7 @@ const DEFAULT_EXE = path.join(
   ROOT,
   "release",
   "win-unpacked",
-  "SweetCraft Launcher.exe"
+  "PaxCraft Launcher.exe"
 );
 
 const exe = process.env.PACK07_EXE?.trim() || DEFAULT_EXE;
@@ -127,7 +127,7 @@ async function cdpSession(): Promise<{
   await cdp("Runtime.enable");
   await cdp("Page.enable");
   await cdp("Log.enable");
-  // Do NOT Page.reload file:// asar — Chromium may land on chrome-error://.
+  // Do NOT Page.reload file:// asar â€” Chromium may land on chrome-error://.
   await new Promise((r) => setTimeout(r, 1500));
 
   const evaluated = (await cdp("Runtime.evaluate", {
@@ -261,7 +261,7 @@ try {
     fail(`console ERR_FILE_NOT_FOUND: ${fileNotFoundLogs.join(" | ")}`);
   }
   if (!result.hasAppRoot) fail("missing <app-root>");
-  if (result.rootChildCount < 1) fail("<app-root> is empty — Angular did not bootstrap");
+  if (result.rootChildCount < 1) fail("<app-root> is empty â€” Angular did not bootstrap");
   if (!result.ngVersion) {
     if (!result.hasSidebarOrNav || result.visibleTextLen < 20) {
       fail("Angular bootstrap marker missing (no ng-version / no visible UI)");

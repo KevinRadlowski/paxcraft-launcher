@@ -2,13 +2,20 @@ import type { AuthState } from '@sweetcraft/ipc';
 
 export type AccountRowTone = 'ok' | 'neutral' | 'error';
 
-/** Formats last-used timestamp for display, or null when unavailable. */
+/** Earliest plausible last-used (rejects epoch / second-scale trash → « 1 janvier 1970 »). */
+const MIN_SANE_LAST_USED_MS = Date.UTC(2000, 0, 1);
+
+/** Formats last-used timestamp for display, or null when unavailable/invalid. */
 export function formatLastUsed(ms: number | undefined): string | null {
-  if (ms == null || !Number.isFinite(ms) || ms <= 0) {
+  if (ms == null || !Number.isFinite(ms) || ms < MIN_SANE_LAST_USED_MS) {
     return null;
   }
   try {
-    return new Date(ms).toLocaleDateString('fr-FR', {
+    const d = new Date(ms);
+    if (Number.isNaN(d.getTime()) || d.getUTCFullYear() < 2000) {
+      return null;
+    }
+    return d.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',

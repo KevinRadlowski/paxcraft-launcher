@@ -150,15 +150,10 @@ import { ScButtonComponent } from '../button/button.component';
         display: flex;
         flex-direction: column;
         padding: var(--sc-space-6);
-        background:
-          radial-gradient(ellipse 85% 55% at 0% 0%, rgba(217, 27, 181, 0.16), transparent 58%),
-          radial-gradient(ellipse 70% 50% at 100% 100%, rgba(138, 27, 217, 0.1), transparent 55%),
-          var(--sc-surface-2, #161622);
-        border: 1px solid rgba(196, 181, 253, 0.42);
+        background: var(--sc-surface-2);
+        border: 1px solid var(--sc-border-default);
         border-radius: var(--sc-radius-xl);
-        box-shadow:
-          var(--sc-shadow-lg, 0 24px 48px rgba(0, 0, 0, 0.45)),
-          0 0 40px rgba(217, 27, 181, 0.12);
+        box-shadow: var(--sc-shadow-lg);
         z-index: 901;
       }
 
@@ -193,9 +188,9 @@ import { ScButtonComponent } from '../button/button.component';
         display: grid;
         place-items: center;
         flex-shrink: 0;
-        border: 1px solid rgba(196, 181, 253, 0.28);
-        background: rgba(168, 85, 247, 0.14);
-        color: #e9d5ff;
+        border: 1px solid var(--sc-border-accent);
+        background: var(--sc-accent-soft);
+        color: var(--sc-text-accent);
         font-weight: var(--sc-weight-bold);
         font-size: 0.95rem;
       }
@@ -207,7 +202,7 @@ import { ScButtonComponent } from '../button/button.component';
       }
 
       .modal-icon.info {
-        color: #c4b5fd;
+        color: var(--sc-text-accent);
       }
 
       .body {
@@ -237,8 +232,8 @@ import { ScButtonComponent } from '../button/button.component';
       .sections li {
         padding: 0.65rem 0.75rem;
         border-radius: var(--sc-radius-md);
-        border: 1px solid rgba(196, 181, 253, 0.12);
-        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--sc-border-default);
+        background: var(--sc-surface-1);
       }
 
       .section-title {
@@ -284,7 +279,7 @@ import { ScButtonComponent } from '../button/button.component';
       }
 
       .icon-btn:focus-visible {
-        outline: 2px solid rgba(192, 132, 252, 0.85);
+        outline: 2px solid var(--sc-accent-300);
         outline-offset: 2px;
       }
 
@@ -292,8 +287,8 @@ import { ScButtonComponent } from '../button/button.component';
         margin-top: var(--sc-space-3);
         padding: var(--sc-space-3);
         border-radius: var(--sc-radius-md);
-        border: 1px solid rgba(196, 181, 253, 0.15);
-        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--sc-border-default);
+        background: var(--sc-surface-1);
       }
 
       .install-path {

@@ -86,7 +86,7 @@ const DEFAULT_STATUS: LauncherStatusDto = {
 
   channel: 'dev',
 
-  serverAddress: 'sweetcraft.datho.st',
+  serverAddress: 'not-configured',
 
   activeOperation: 'IDLE',
 
@@ -235,8 +235,8 @@ export class DevLauncherDesktopGateway implements LauncherDesktopGateway {
   /** Backend-derived instance directory flag for open-folder UX. */
   private instanceDirectoryExists = false;
 
-  /** PACK-10.1G — dev mock configured instance path. */
-  private devInstancePath = 'C:\\Dev\\SweetCraft';
+  /** PACK-PAX-09/10 — chemins fictifs Dev gateway uniquement (pas de chemins réels). */
+  private devInstancePath = 'C:\\Dev\\PaxCraft';
 
   private playFixture: DevPlayFixture = 'SUCCESS';
 
@@ -1496,7 +1496,7 @@ export class DevLauncherDesktopGateway implements LauncherDesktopGateway {
       playersMax: null,
       versionLabel: null,
       checkedAt: new Date().toISOString(),
-      address: 'sweetcraft.datho.st',
+      address: 'not-configured',
     }),
   };
 
@@ -1563,9 +1563,10 @@ export class DevLauncherDesktopGateway implements LauncherDesktopGateway {
   };
 
   readonly instance = {
+    /** Fixture Dev only — fictional pick path (PACK-PAX-10: SweetCraft → PaxCraft). */
     chooseLocation: async () => ({
       cancelled: false,
-      path: 'D:\\Games\\SweetCraft',
+      path: 'D:\\Games\\PaxCraft',
     }),
     setLocation: async (path: string) => {
       this.devInstancePath = path;

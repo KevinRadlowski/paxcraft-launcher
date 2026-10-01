@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { ErrorCode, LauncherError } from "../core/errors/index.js";
+import { assertPaxLiveAuthNetworkAllowed } from "../product/paxNetworkConfig.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -60,6 +61,10 @@ export class WindowsSystemBrowser implements SystemBrowser {
   }
 
   async open(url: string): Promise<void> {
+    // Injected execFile = argv harness (tests) — never soft-enable production live auth.
+    if (this.execFileImpl === execFileAsync) {
+      assertPaxLiveAuthNetworkAllowed();
+    }
     assertHttpsAuthUrl(url, { expectMicrosoftHost: this.expectMicrosoftHost });
     if (process.platform !== "win32" && this.execFileImpl === execFileAsync) {
       throw new LauncherError(ErrorCode.BROWSER_OPEN_FAILED, "WindowsSystemBrowser requires win32", {});
@@ -79,8 +84,10 @@ export class WindowsSystemBrowser implements SystemBrowser {
 /** Cross-platform helper for live CLI — Windows primary; others use platform openers without shell. */
 export class DefaultSystemBrowser implements SystemBrowser {
   private readonly inner: SystemBrowser;
+  private readonly harnessExecFile: boolean;
 
   constructor(opts: { execFile?: ExecFileLike } = {}) {
+    this.harnessExecFile = opts.execFile !== undefined;
     if (process.platform === "win32" || opts.execFile) {
       this.inner = new WindowsSystemBrowser({
         ...(opts.execFile ? { execFile: opts.execFile } : {}),
@@ -112,6 +119,10 @@ export class DefaultSystemBrowser implements SystemBrowser {
   }
 
   open(url: string): Promise<void> {
+    // Production path always gated; injected execFile harness skips (argv unit tests).
+    if (!this.harnessExecFile) {
+      assertPaxLiveAuthNetworkAllowed();
+    }
     return this.inner.open(url);
   }
 }

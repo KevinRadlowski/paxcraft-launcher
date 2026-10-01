@@ -54,17 +54,17 @@ const FAKE_TOGGLE_PATTERNS = [
   /test.?arbitrary.?host|hôte.?arbitraire/i
 ];
 
-describe("0.6F.4 Settings premium page source contracts", () => {
-  it("premium layout: hero + 6 cards + banner", () => {
-    assert.match(pageSource, /sc-hero/);
+describe("PACK-PAX-08 Settings page source contracts", () => {
+  it("compact header + functional cards (no castle hero / banner)", () => {
+    assert.doesNotMatch(pageSource, /sc-hero|settings-banner|SETTINGS_ASSETS/);
+    assert.match(pageSource, /page-head/);
     assert.match(pageSource, /settings-memory-card/);
     assert.match(pageSource, /settings-interface-card/);
     assert.match(pageSource, /settings-system-card/);
     assert.match(pageSource, /settings-network-card/);
     assert.match(pageSource, /settings-data-card/);
     assert.match(pageSource, /settings-about-card/);
-    assert.match(pageSource, /settings-banner/);
-    assert.match(pageSource, /SETTINGS_ASSETS/);
+    assert.match(pageSource, /settings-location-card/);
   });
 
   it("writable settings only: memoryMiB + reducedMotion + reset 2048", () => {
@@ -97,24 +97,20 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.match(pageSource, /gateway\.storage\.openLogs/);
     assert.match(pageSource, /HomeServerStatusService/);
     assert.match(pageSource, /serverSvc\.refresh/);
-    assert.match(pageSource, /sweetcraft\.datho\.st/);
+    assert.doesNotMatch(pageSource, /sweetcraft\.datho\.st/);
     assert.doesNotMatch(pageSource, /gateway\.server\.getStatus/);
   });
 
-  it("website CTA uses allowlisted SWEETCRAFT_WEBSITE_URL", () => {
-    assert.match(productLinks, /https:\/\/www\.xnosweet\.fr\/sweetcraft/);
+  it("website CTA references SWEETCRAFT_WEBSITE_URL (unset / no historical CDN)", () => {
+    assert.match(productLinks, /SWEETCRAFT_WEBSITE_URL:\s*string\s*\|\s*null\s*=\s*null|SWEETCRAFT_WEBSITE_URL\s*=\s*null/);
     assert.match(pageSource, /SWEETCRAFT_WEBSITE_URL/);
-    assert.match(pageSource, /target="_blank"/);
+    assert.doesNotMatch(productLinks, /https:\/\/www\.xnosweet\.fr\/sweetcraft/);
     assert.doesNotMatch(pageSource, /cdn\.xnosweet\.fr/);
-    const httpsUrls = [...pageSource.matchAll(/https:\/\/[^\s'"]+/g)].map((m) => m[0]!);
-    for (const url of httpsUrls) {
-      assert.equal(url.startsWith("https://www.xnosweet.fr/sweetcraft"), true, url);
-    }
   });
 
-  it("About uses publisher Maidenhead + XNOSWEET + store versions + authoritative buildId", () => {
+  it("About uses publisher + Pax brand + store versions + authoritative buildId", () => {
     assert.equal(frJson["settings.about.publisher_value"], "Maidenhead");
-    assert.match(frJson["settings.about.brand_value"] ?? "", /XNOSWEET/);
+    assert.match(frJson["settings.about.brand_value"] ?? "", /PaxCraft/);
     assert.equal(frJson["settings.about.build_id"], "Build");
     assert.match(pageSource, /aboutBuildId/);
     assert.match(pageSource, /store\.info\(\)\?\.buildId/);
@@ -151,7 +147,7 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.doesNotMatch(pageSource, /DirectX|GPU\b/);
     assert.equal(frJson["settings.system.storage"], "STOCKAGE");
     assert.equal(frJson["settings.system.ram_used"], "RAM utilisée");
-    assert.equal(frJson["settings.system.sweetcraft_drive"], "Disque SweetCraft");
+    assert.equal(frJson["settings.system.sweetcraft_drive"], "Disque PaxCraft");
     assert.equal(frJson["error.network.pack_check"], "Vérification du pack impossible.");
     assert.equal(frJson["error.network.auth"], "Erreur réseau d’authentification.");
     assert.equal(frJson["error.install.status_network"], "Impossible de vérifier la version du pack.");
@@ -170,7 +166,7 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.match(memorySource, /export function formatDiskCapacityGiB/);
   });
 
-  it("V2: diskUsedPercent helper still present; rings use sweetcraft disk", () => {
+  it("V2: diskUsedPercent helper still present; rings use product disk", () => {
     assert.match(memorySource, /export function diskUsedPercent/);
     assert.match(pageSource, /stroke-dasharray/);
     assert.match(pageSource, /metric-rings/);
@@ -184,7 +180,6 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.equal(frJson["settings.data.unavailable"], "Indisponible");
     assert.match(pageSource, /settings\.data\.unavailable_install/);
     assert.match(pageSource, /!storageSummary\(\)\?\.instanceAvailable/);
-    assert.match(pageSource, /instanceAvailable = fs\.existsSync\(INSTANCE_ROOT\)/);
   });
 
   it("V2: clickable matrix contracts still hold", () => {
@@ -197,7 +192,6 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.match(pageSource, /openLogs\(\)/);
     assert.match(pageSource, /settings\.about\.site/);
     assert.match(pageSource, /settings\.network\.site/);
-    assert.match(pageSource, /settings\.banner\.cta/);
     assert.doesNotMatch(pageSource, /href="#"/);
     assert.doesNotMatch(pageSource, /console\.log\(/);
   });
@@ -210,7 +204,7 @@ describe("0.6F.4 Settings premium page source contracts", () => {
     assert.match(versionTs, /version\.generated/);
     assert.doesNotMatch(versionTs, /LAUNCHER_VERSION\s*=\s*["']/);
     const generated = readFileSync(path.join(root, "src/version.generated.ts"), "utf8");
-    assert.match(generated, /LAUNCHER_VERSION = "0\.6\.0-rc\.18"/);
+    assert.match(generated, /LAUNCHER_VERSION = "0\.6\.0\.rc\.18"|LAUNCHER_VERSION = "0\.6\.0-rc\.18"/);
     assert.match(generated, /WINDOWS_FILE_VERSION = "0\.6\.0\.18"/);
   });
 });

@@ -1,5 +1,5 @@
-/**
- * PACK-10.1G — instance location picker, set, and move orchestration (Main-only).
+﻿/**
+ * PACK-10.1G â€” instance location picker, set, and move orchestration (Main-only).
  */
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -44,7 +44,7 @@ export interface InstanceLocationServiceDeps {
   readonly getPlay: () => PlayDesktopService | null;
   readonly getBrowserWindow: () => BrowserWindow | null;
   readonly onProgress?: (p: InstallProgressDto) => void;
-  /** Must settle before setLocation/moveInstance return — install may follow immediately. */
+  /** Must settle before setLocation/moveInstance return â€” install may follow immediately. */
   readonly onLocationChanged?: () => void | Promise<void>;
   readonly onNotification?: (
     level: "INFO" | "SUCCESS" | "WARNING" | "ERROR",
@@ -121,7 +121,7 @@ export class InstanceLocationService {
     const win = this.deps.getBrowserWindow();
     const dialogOpts = {
       properties: ["openDirectory", "createDirectory"] as ("openDirectory" | "createDirectory")[],
-      title: "Choisir l'emplacement de SweetCraft"
+      title: "Choisir l'emplacement de l'instance"
     };
     const result = win
       ? await dialog.showOpenDialog(win, dialogOpts)

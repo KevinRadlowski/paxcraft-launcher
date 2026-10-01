@@ -102,6 +102,13 @@ export interface OrchestratorDependencies {
   emitter?: ProgressEmitter;
   /** Injectable id factory for tests. */
   createOperationId?: () => string;
+  /**
+   * PACK-PAX-05.1 — opaque harness permit (tests only via paxNetworkTestHooks).
+   * Never set by CLI / packaged desktop.
+   */
+  networkHarness?: import("../../product/paxNetworkConfig.js").NetworkHarnessPermit;
+  /** Runtime trust context for network policy. Omission ⇒ packaged-production. */
+  networkRuntime?: import("../../product/paxNetworkConfig.js").PaxNetworkRuntimeContext;
   /** Test/injection hooks — never used in production CLI. */
   hooks?: {
     /** Called while lock is held, during runtime prep (before downloads if skipped). */

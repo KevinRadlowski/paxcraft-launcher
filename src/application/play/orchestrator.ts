@@ -3,7 +3,7 @@ import { constants as fsConstants } from "node:fs";
 import path from "node:path";
 import { ErrorCode, LauncherError } from "../../core/errors/index.js";
 import { resolveLatestRelease } from "../../core/resolve/index.js";
-import { DEFAULT_PRODUCT_BASE } from "../../distribution/urls/index.js";
+import { requireConfiguredDistributionOrigin } from "../../product/paxNetworkConfig.js";
 import { InstancePaths } from "../../instance/layout/index.js";
 import { InstanceLock } from "../../instance/lock/index.js";
 import { defaultRuntimeRoot } from "../../instance/paths/index.js";
@@ -170,7 +170,11 @@ export async function startGame(
     throwIfAborted(req.signal);
     emitPlayProgress(deps.emitter, operationId, "PREPARING_LAUNCH");
 
-    const productBase = req.productBase ?? DEFAULT_PRODUCT_BASE;
+    const productBase = requireConfiguredDistributionOrigin({
+      explicit: req.productBase,
+      harness: deps.networkHarness,
+      runtime: deps.networkRuntime
+    });
     const resolved = await resolveLatestRelease({
       channel: req.channel,
       productBase,

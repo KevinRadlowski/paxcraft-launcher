@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import { EventEmitter } from "node:events";
 import {
   McStatusOfflineError,
@@ -9,9 +9,14 @@ import {
 import {
   ServerStatusService,
   normalizeServerStatusDto,
-  resetServerStatusServiceForTests
+  resetServerStatusServiceForTests,
+  setConfiguredServerAddressForTests
 } from "../../desktop/main/server-status/server-status-service.js";
-import { IpcChannels, SWEETCRAFT_SERVER_ADDRESS } from "../../desktop/shared/contract.js";
+import {
+  IpcChannels,
+  PAX_SERVER_ADDRESS_UNCONFIGURED,
+  SWEETCRAFT_SERVER_ADDRESS
+} from "../../desktop/shared/contract.js";
 import { assertEmptyInvokePayload } from "../../desktop/shared/validate.js";
 
 /** Minimal fake TCP status responder (status JSON only, then close). */
@@ -43,7 +48,6 @@ class FakeSocket extends EventEmitter {
   destroyed = false;
   write(data: Buffer): boolean {
     this.written.push(data);
-    // After handshake+request, emit status (+ optional ping reply on next write).
     queueMicrotask(() => {
       if (this.destroyed) return;
       if (this.written.length === 2) {
@@ -58,7 +62,6 @@ class FakeSocket extends EventEmitter {
           )
         );
       } else if (this.written.length >= 3) {
-        // Echo ping packet id 0x01 with 8-byte payload
         const pingBody = Buffer.alloc(8);
         this.emit("data", frame(0x01, pingBody));
       }
@@ -73,6 +76,36 @@ class FakeSocket extends EventEmitter {
 }
 
 describe("0.6F.2 V3 Minecraft server status", () => {
+  beforeEach(() => {
+    resetServerStatusServiceForTests();
+    setConfiguredServerAddressForTests("127.0.0.1");
+  });
+  afterEach(() => {
+    resetServerStatusServiceForTests();
+  });
+
+  it("unconfigured Pax server → UNKNOWN without ping (not historical OFFLINE)", async () => {
+    setConfiguredServerAddressForTests(null);
+    let calls = 0;
+    const service = new ServerStatusService({
+      ping: async () => {
+        calls++;
+        return {
+          online: true as const,
+          latencyMs: 1,
+          playersOnline: 1,
+          playersMax: 1,
+          versionLabel: "x"
+        };
+      }
+    });
+    const dto = await service.getStatus();
+    assert.equal(calls, 0);
+    assert.equal(dto.state, "UNKNOWN");
+    assert.equal(dto.address, PAX_SERVER_ADDRESS_UNCONFIGURED);
+    assert.notEqual(dto.address, SWEETCRAFT_SERVER_ADDRESS);
+  });
+
   it("ONLINE result maps players + latency", async () => {
     const service = new ServerStatusService({
       ping: async () => ({
@@ -89,7 +122,7 @@ describe("0.6F.2 V3 Minecraft server status", () => {
     assert.equal(dto.playersOnline, 247);
     assert.equal(dto.playersMax, 500);
     assert.equal(dto.versionLabel, "1.20.1");
-    assert.equal(dto.address, SWEETCRAFT_SERVER_ADDRESS);
+    assert.equal(dto.address, "127.0.0.1");
   });
 
   it("OFFLINE from protocol offline error", async () => {
@@ -146,7 +179,7 @@ describe("0.6F.2 V3 Minecraft server status", () => {
   it("malformed normalize → UNKNOWN", () => {
     const dto = normalizeServerStatusDto({ state: "HACKED", latencyMs: "nope" });
     assert.equal(dto.state, "UNKNOWN");
-    assert.equal(dto.address, SWEETCRAFT_SERVER_ADDRESS);
+    assert.equal(dto.address, PAX_SERVER_ADDRESS_UNCONFIGURED);
   });
 
   it("concurrent refresh shares one in-flight promise", async () => {
@@ -192,8 +225,8 @@ describe("0.6F.2 V3 Minecraft server status", () => {
     assert.ok(result.latencyMs === null || result.latencyMs >= 0);
   });
 
-  it("host is product constant — service ignores external host intent", async () => {
-    resetServerStatusServiceForTests();
+  it("host comes from product config only — never renderer (and never historical default)", async () => {
+    setConfiguredServerAddressForTests("127.0.0.1");
     const seen: string[] = [];
     const service = new ServerStatusService({
       ping: async (opts) => {
@@ -208,6 +241,12 @@ describe("0.6F.2 V3 Minecraft server status", () => {
       }
     });
     await service.getStatus();
-    assert.deepEqual(seen, [SWEETCRAFT_SERVER_ADDRESS]);
+    assert.deepEqual(seen, ["127.0.0.1"]);
+    assert.ok(!seen.includes(SWEETCRAFT_SERVER_ADDRESS));
+  });
+
+  it("historical constant remains documented but is not the ping default", () => {
+    assert.equal(SWEETCRAFT_SERVER_ADDRESS, "sweetcraft.datho.st");
+    assert.equal(PAX_SERVER_ADDRESS_UNCONFIGURED, "not-configured");
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it } from "node:test";
+﻿import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   assertEmptyInvokePayload,
@@ -29,7 +29,7 @@ describe("0.6A desktop IPC validation", () => {
 
   it("normalizes app info and rejects garbage", () => {
     const ok = normalizeAppInfo({
-      name: "SweetCraft Launcher",
+      name: "PaxCraft Launcher",
       version: "0.6.0-beta.1",
       platform: "win32",
       environment: "development"
@@ -94,14 +94,14 @@ describe("0.6A desktop IPC validation", () => {
     );
   });
 
-  it("external URL allowlist is HTTPS-only and structurally matched", () => {
-    assert.equal(isAllowedExternalUrl("https://sweetcraft.datho.st/"), true);
-    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), true);
-    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft/"), true);
+  it("external URL allowlist is empty (Pax links unset) and structurally matched", () => {
+    assert.equal(isAllowedExternalUrl("https://sweetcraft.datho.st/"), false);
+    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft"), false);
+    assert.equal(isAllowedExternalUrl("https://www.xnosweet.fr/sweetcraft/"), false);
     assert.equal(isAllowedExternalUrl("https://evil.example/"), false);
     assert.equal(isAllowedExternalUrl("http://sweetcraft.datho.st/"), false);
     assert.equal(isAllowedExternalUrl("https://user:pass@sweetcraft.datho.st/"), false);
-    assert.ok(EXTERNAL_URL_RULES.length >= 3);
+    assert.equal(EXTERNAL_URL_RULES.length, 0);
   });
 
   it("BrowserWindow security preferences are enforced", () => {

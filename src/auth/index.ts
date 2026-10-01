@@ -37,6 +37,7 @@ export {
   ENV_ALLOW_LIVE_AUTH,
   PRODUCT_MICROSOFT_CLIENT_ID
 } from "./launcherConfig.js";
+export { assertPaxLiveAuthNetworkAllowed } from "../product/paxNetworkConfig.js";
 export {
   generateCodeVerifier,
   generateOAuthState,

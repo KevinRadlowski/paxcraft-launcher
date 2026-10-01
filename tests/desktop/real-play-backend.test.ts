@@ -79,6 +79,7 @@ describe("0.6D.1 RealPlayBackend wiring", () => {
       distRoot,
       trustedKeysPath: keysSrc,
       channel: "dev",
+      productBase: "https://cdn.example.test/sweetcraft",
       memoryMiB: 2048,
       startGameOverride,
       assertReadyOverride: async () => {
@@ -139,6 +140,7 @@ describe("0.6D.1 RealPlayBackend wiring", () => {
       distRoot,
       trustedKeysPath: keysSrc,
       channel: "dev",
+      productBase: "https://cdn.example.test/sweetcraft",
       assertReadyOverride: async () => {},
       startGameOverride: async (req) => ({
         operationId: "op",
@@ -182,7 +184,8 @@ describe("0.6D.1 RealPlayBackend wiring", () => {
       instancePath: path.join(tmp, "i"),
       channel: "stable",
       trustedKeysPath: keysSrc,
-      memoryMiB: 4096
+      memoryMiB: 4096,
+      productBase: "https://cdn.example.test/sweetcraft"
     });
     const req = ctx.buildRequest("mc:abc");
     assert.deepEqual(
@@ -190,6 +193,7 @@ describe("0.6D.1 RealPlayBackend wiring", () => {
       ["accountId", "channel", "instancePath", "memoryMiB", "productBase", "runtimePath"].sort()
     );
     assert.ok(!String(req.productBase).includes("example.invalid"));
+    assert.ok(String(req.productBase).includes("example.test"));
     fs.rmSync(tmp, { recursive: true, force: true });
   });
 

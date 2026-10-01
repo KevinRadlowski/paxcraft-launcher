@@ -1,5 +1,5 @@
-/**
- * E2E hardening — product Microsoft client id + trust store defaults (no live network).
+﻿/**
+ * E2E hardening â€” product Microsoft client id + trust store defaults (no live network).
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -34,8 +34,8 @@ import {
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
-describe("E2E hardening — Microsoft client id product default", () => {
-  it("A. without env → embedded product client id", () => {
+describe("E2E hardening â€” Microsoft client id product default", () => {
+  it("A. without env â†’ embedded product client id", () => {
     const cfg = resolveLauncherAuthConfig({ env: {} });
     assert.equal(cfg.microsoftClientId, PRODUCT_MICROSOFT_CLIENT_ID);
     assert.equal(cfg.microsoftClientId, "1cd11e2e-955a-46ba-819c-853a754646a4");
@@ -93,7 +93,7 @@ describe("E2E hardening — Microsoft client id product default", () => {
 
     assert.ok(transport.calls.some((c) => c.url === DEFAULT_MS_TOKEN_ENDPOINT));
     const bodies: string[] = [];
-    // Mock pushes undefined for body-less GETs — do not stop on first undefined.
+    // Mock pushes undefined for body-less GETs â€” do not stop on first undefined.
     for (let i = 0; i < transport.calls.length; i++) {
       const b = transport.consumeCapturedSensitiveBody();
       if (typeof b === "string" && b.length > 0) bodies.push(b);
@@ -107,10 +107,10 @@ describe("E2E hardening — Microsoft client id product default", () => {
   });
 });
 
-describe("E2E hardening — CLI help trusted-keys", () => {
+describe("E2E hardening â€” CLI help trusted-keys", () => {
   it("C. play help documents --trusted-keys", () => {
     const mainSrc = readFileSync(path.join(ROOT, "src/cli/main.ts"), "utf8");
-    const playHelpStart = mainSrc.indexOf("SweetCraft Launcher — play");
+    const playHelpStart = mainSrc.indexOf("PaxCraft Launcher — play");
     assert.ok(playHelpStart > 0);
     const playHelpSlice = mainSrc.slice(playHelpStart, playHelpStart + 900);
     assert.match(playHelpSlice, /--trusted-keys <path>/);
@@ -128,7 +128,7 @@ describe("E2E hardening — CLI help trusted-keys", () => {
   });
 });
 
-describe("E2E hardening — product trust default", () => {
+describe("E2E hardening â€” product trust default", () => {
   it("D. config/trusted-keys.json loads production public key", () => {
     const filePath = path.join(ROOT, "config", "trusted-keys.json");
     const store = loadTrustedKeyStoreFromFile(filePath);

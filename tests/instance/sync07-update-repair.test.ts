@@ -144,7 +144,7 @@ async function seed013Fixture(paths: InstancePaths, manifest013: Awaited<ReturnT
     installedReleaseSha256: "0".repeat(64),
     installedManifestSha256: "1".repeat(64),
     channel: "dev-local",
-    productBase: "https://cdn.xnosweet.fr/sweetcraft",
+    productBase: "https://cdn.example.test/sweetcraft",
     files: managed,
     // User-owned preferences already present — first-run ownership transferred (SYNC-12).
     appliedFirstRunSeeds: ["mc-options-firstrun", "mc-servers-sweetcraft"],

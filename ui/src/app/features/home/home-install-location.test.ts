@@ -144,7 +144,7 @@ test('setLocation success with install failure keeps committed location', async 
 });
 
 test('install location modal French copy exists', () => {
-  assert.match(translate('install.location.title'), /Installer SweetCraft/i);
+  assert.match(translate('install.location.title'), /Installer le pack|Installer/i);
   assert.match(translate('install.location.body'), /emplacement/i);
   assert.match(translate('install.location.hint'), /paramètres/i);
   assert.equal(translate('install.location.confirm'), 'Installer');

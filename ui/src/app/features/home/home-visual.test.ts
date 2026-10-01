@@ -49,10 +49,10 @@ describe('0.6F.2 V3.2 Home micro-polish', () => {
     assert.equal(heroStatusPresentation('READY', 'RUNNING').labelKey, 'home.hero.status.running');
   });
 
-  it('server address uses dedicated mono class (structure contract)', () => {
-    // Presentation rule: .server uses nowrap+ellipsis at desktop; asset path distinct.
-    assert.ok(HOME_ASSETS.serverCard.includes('server-card'));
-    assert.notEqual(HOME_ASSETS.serverCard, HOME_ASSETS.hero);
+  it('hero and mark assets remain distinct', () => {
+    assert.ok(HOME_ASSETS.hero.includes('pax'));
+    assert.ok(HOME_ASSETS.paxLogo.includes('logo-pax'));
+    assert.notEqual(HOME_ASSETS.hero, HOME_ASSETS.paxLogo);
   });
 
   it('Home asset slots remain unique', () => {

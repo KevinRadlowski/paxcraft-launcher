@@ -47,7 +47,7 @@ export const PRESENTATION_SETTINGS_DEFAULTS: SettingsDto = {
 
 
 
-const DEFAULT_SERVER = 'sweetcraft.datho.st';
+const DEFAULT_SERVER = 'not-configured';
 
 
 

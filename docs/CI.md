@@ -1,80 +1,65 @@
-# Continuous Integration (PACK-10)
+# Continuous Integration â€” Pax Horizon (PACK-PAX-03.1)
+
+Document de politique **effective** pour les copies Pax.
+Les YAML SweetCraft historiques nâ€™Ã©taient pas disponibles localement ; les workflows ont Ã©tÃ© **reconstruits** depuis ce document (Ã©tat PACK-10), les scripts `package.json` et les contrats de tests PACK-12B / PACK-12G.1, puis adaptÃ©s Ã  la politique provisoire Pax (validation sans distribution).
 
 ## Triggers
 
-| Workflow | File | Event |
-|----------|------|--------|
-| CI PR | `.github/workflows/ci-pr.yml` | `pull_request` → `main` |
-| CI Main | `.github/workflows/ci-main.yml` | `push` → `main` |
+| Workflow | File | Event | RÃ´le |
+|----------|------|--------|------|
+| CI PR | `.github/workflows/ci-pr.yml` | `pull_request` â†’ `main` | Validation |
+| CI Main | `.github/workflows/ci-main.yml` | `push` â†’ `main` | Validation |
+| Player Qualification (prep) | `.github/workflows/player-release.yml` | `workflow_dispatch` **uniquement** | Qualification prÃ©paratoire manuelle |
 
 `pull_request_target` is **not** used.
+**Pas** de dÃ©clencheur `push.tags` / crÃ©ation de GitHub Release (y compris draft) dans ce lot.
+
+Le chemin `player-release.yml` est **conservÃ©** pour continuitÃ© des contrats de tests ; le nom affichÃ© GitHub est `Player Qualification (prep, no release)`. Ce nâ€™est **pas** un pipeline de distribution.
 
 ## Runner / toolchain
 
-- Runner: `windows-latest` (Windows Electron product)
-- Node: `22.x` (explicit `setup-node`)
-- pnpm: `9.15.0` (matches `packageManager` field)
-- Install: `pnpm install --frozen-lockfile`
-- Cache: pnpm store via `actions/setup-node` `cache: pnpm` (lockfile-keyed). Not cached: `node_modules`, `dist/`, `release/`, user data.
+- Runner: `windows-latest`
+- Node: `22` (`actions/setup-node`)
+- pnpm: `9.15.0` (alignÃ© sur `packageManager` du launcher ; lâ€™hÃ´te local peut diffÃ©rer, ex. 9.15.9)
+- Install: `pnpm install --frozen-lockfile` (root) + `pnpm --dir ui install --frozen-lockfile`
+- Cache: store pnpm via `setup-node` `cache: pnpm`
 
-## PR gates
+## Gates communs (PR / Main / Qualification prep)
 
-1. `pnpm version:check` (SemVer SoT strict; build provenance refreshed from HEAD — PACK-12F.1)
-2. `pnpm build` (`dist/**` for packaged parity suites — PACK-12F.2)
-3. `pnpm test` (full suite)
+1. `pnpm version:check` (provenance rafraÃ®chie depuis HEAD selon scripts rÃ©els)
+2. **Build** â€” `pnpm build` (`dist/**` avant tests qui en dÃ©pendent)
+3. **Full test suite** â€” `pnpm test` (moteur + Desktop + UI via script historique)
+4. `pnpm desktop:shared:build`
+5. `pnpm desktop:ui:build`
 
-Packaging is **intentionally omitted** on PR (cost). Package + renderer smoke run on `main`.
+Ordre contractuel : step name `Build` **avant** step name `Full test suite` (PACK-12G.1).
 
-## Main gates
+Isolation tests CI : `PAXCRAFT_LAUNCHER_DATA_DIR` â†’ `${{ runner.temp }}/pax-launcher-data`.
 
-1. `pnpm version:check` (SemVer SoT strict; build provenance refreshed from HEAD — PACK-12F.1)
-2. `pnpm build` (produces `dist/**` required by packaged parity / fresh-firstrun suites — PACK-12F.2)
-3. `pnpm test`
-4. `pnpm desktop:package` (unsigned)
-5. `pnpm desktop:package:renderer-smoke` (real Angular bootstrap — PACK-07A)
+## Explicitement hors scope (PACK-PAX-03.1)
 
-Optional CI artifact (main only):
-
-- Name: `sweetcraft-launcher-main-unsigned`
-- Content: NSIS setup under `release/`
-- Retention: 7 days
-- **Not** a GitHub Release; unsigned/internal only
-
-## Explicitly out of scope (PACK-10)
-
+- `pnpm desktop:package` / NSIS / `desktop:package:renderer-smoke`
+- Upload dâ€™artefacts Actions de setup joueur
+- GitHub Releases / tags / `softprops/action-gh-release`
 - Windows code signing / Trusted Signing / OIDC
-- GitHub Releases / tags
-- Deployment / CDN / updater
-- Legal publisher identity gate (`SWEETCRAFT_REQUIRE_LEGAL_IDENTITY`) — deferred to release qualification so ordinary CI stays green while `LEGAL_IDENTITY_REQUIRED` remains open
+- DÃ©ploiement / CDN / VPS / secrets SweetCraft
+- Gate `SWEETCRAFT_REQUIRE_LEGAL_IDENTITY` (reportÃ©e)
+
+Le produit conserve `desktop:package:builder --publish never` et `electron-builder.yml` `publish: null` pour le **futur** lot packaging â€” non exÃ©cutÃ©s ici.
 
 ## Permissions
 
-Both workflows:
+Tous les workflows :
 
 ```yaml
 permissions:
   contents: read
 ```
 
-No secrets. No `id-token: write`.
+Pas de `contents: write`. Pas de secrets. Pas de `id-token: write`.
 
-## Player Release (PACK-12B)
+Environment GitHub `player-release` : utilisÃ© uniquement comme barriÃ¨re manuelle sur le workflow de qualification prep (pas dâ€™Ã©criture release).
 
-Workflow: `.github/workflows/player-release.yml` — **Player Release (unsigned draft)**.
+## Note
 
-This is **not** `ci-main`. `ci-main` remains the engineering unsigned NSIS artifact (7-day Actions upload). Player distribution uses a **separate** tag / `workflow_dispatch` workflow that:
-
-- qualification order matches `ci-main` / `ci-pr` for shared gates: `version:check` → **build** → **full tests** → package → smoke (PACK-12G.1; `dist/**` required on clean runners)
-- then player-only steps: provenance assert → `release:manifest` → `release:body` → draft Release **or** qualification artifacts
-- fail-closes on dirty provenance / SemVer / SHA-256 (`pnpm release:manifest`)
-- writes French notes (`pnpm release:body`) from `docs/release/RELEASE_BODY.template.md`
-- on tag `v*`: creates a **draft** GitHub Release only (`draft: true`). A human publishes. Never auto-latest.
-- on `workflow_dispatch` without a tag: **qualification dry-run** — upload Actions artifacts only, **no** GitHub Release
-
-Intentional differences vs `ci-main`: `environment: player-release`, DIRTY/commit provenance gate, SemVer↔tag check, manifest + French body, draft Release (tag) vs Actions artifact upload (non-tag). No package/smoke skip.
-
-GitHub Environment: `player-release` (required reviewers recommended).
-
-Player install / SmartScreen: [PLAYER_INSTALL.md](PLAYER_INSTALL.md).
-
-**PE branding (PACK-12C):** `package.json` `author.name` = `SweetCraft / XBASE` → PE CompanyName. Product branding only — **not** Authenticode / verified publisher. Windows code signing remains **out of scope** (PACK-11).
+Un test local de structure YAML **ne prouve pas** lâ€™exÃ©cution rÃ©elle sur GitHub Actions.

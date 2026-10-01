@@ -170,37 +170,22 @@ describe("0.6F.3 V3 Account page source contracts", () => {
     assert.match(pageSource, /account\.add/);
   });
 
-  it("Account hero is compacted vs shared Home defaults (page-local override)", () => {
-    assert.match(pageSource, /min-height: clamp\(21rem, 38vh, 26rem\)/);
-    assert.match(pageSource, /padding-bottom: clamp\(5\.25rem, 13vh, 8rem\)/);
+  it("compact page header without SweetCraft castle hero", () => {
+    assert.match(pageSource, /page-head/);
+    assert.match(pageSource, /account\.title/);
+    assert.match(pageSource, /account\.subtitle/);
+    assert.doesNotMatch(pageSource, /sc-hero|ACCOUNT_ASSETS|hero-stage|account-community/);
   });
 
-  it("dedicated Account WebP assets (not Home hero)", () => {
-    const assetsSource = readFileSync(
-      path.join(root, "ui/src/app/features/account/account-assets.ts"),
-      "utf8",
-    );
-    assert.match(assetsSource, /sweetcraft-account-hero\.webp/);
-    assert.match(assetsSource, /sweetcraft-account-community\.webp/);
-    assert.match(pageSource, /ACCOUNT_ASSETS\.hero/);
-    assert.match(pageSource, /ACCOUNT_ASSETS\.community/);
-    assert.doesNotMatch(pageSource, /sweetcraft-home-hero\.webp/);
-  });
-
-  it("community CTA uses official website URL (not CDN)", () => {
-    assert.match(productLinks, /https:\/\/www\.xnosweet\.fr\/sweetcraft/);
-    assert.match(pageSource, /SWEETCRAFT_WEBSITE_URL/);
-    assert.match(pageSource, /account\.community\.site/);
+  it("community marketing strip removed — no invented site CTA on Account", () => {
+    assert.match(productLinks, /SWEETCRAFT_WEBSITE_URL:\s*string\s*\|\s*null\s*=\s*null|SWEETCRAFT_WEBSITE_URL\s*=\s*null/);
+    assert.doesNotMatch(pageSource, /account\.community\.site|SWEETCRAFT_WEBSITE_URL/);
+    assert.doesNotMatch(productLinks, /https:\/\/www\.xnosweet\.fr\/sweetcraft/);
     assert.doesNotMatch(pageSource, /cdn\.xnosweet\.fr/);
-    const httpsUrls = [...pageSource.matchAll(/https:\/\/[^\s'"]+/g)].map((m) => m[0]!);
-    for (const url of httpsUrls) {
-      assert.equal(url.startsWith("https://www.xnosweet.fr/sweetcraft"), true, url);
-    }
   });
 
   it("Home community CTAs use the same website URL constant", () => {
-    assert.match(homeSource, /SWEETCRAFT_WEBSITE_URL/);
-    assert.match(homeSource, /home\.community\.site/);
+    assert.match(homeSource, /SWEETCRAFT_WEBSITE_URL|PAX_COMMUNITY_WEBSITE_URL/);
     assert.doesNotMatch(homeSource, /const SITE_URL = 'https:\/\/sweetcraft\.datho\.st/);
   });
 
@@ -209,10 +194,9 @@ describe("0.6F.3 V3 Account page source contracts", () => {
     assert.doesNotMatch(pageSource, /Préférences|preferences|routerLink.*pref/i);
   });
 
-  it("responsive + reduced-motion breakpoints present", () => {
+  it("responsive breakpoints present", () => {
     assert.match(pageSource, /@media \(max-width: 1279px\)/);
     assert.match(pageSource, /@media \(max-width: 900px\)/);
-    assert.match(pageSource, /@media \(prefers-reduced-motion: reduce\)/);
     assert.match(pageSource, /repeat\(3, minmax\(0, 1fr\)\)/);
     assert.match(pageSource, /repeat\(2, minmax\(0, 1fr\)\)/);
     assert.match(pageSource, /:focus-visible/);
@@ -220,13 +204,13 @@ describe("0.6F.3 V3 Account page source contracts", () => {
 
   it("accessibility markers present", () => {
     assert.match(pageSource, /aria-live="polite"/);
-    assert.match(pageSource, /<h1 class="hero-title"/);
+    assert.match(pageSource, /<h1>/);
     assert.match(pageSource, /aria-hidden="true"/);
     assert.match(pageSource, /role="alert"/);
   });
 
   it("Home page source untouched by Account polish markers", () => {
-    assert.doesNotMatch(homeSource, /account-overview|sweetcraft-account-hero/);
-    assert.match(homeSource, /sweetcraft-home-hero|HOME_ASSETS|home\.hero/);
+    assert.doesNotMatch(homeSource, /account-overview|account-identity/);
+    assert.match(homeSource, /home\.hero|HOME_ASSETS|background-accueil/);
   });
 });

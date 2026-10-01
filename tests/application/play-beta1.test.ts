@@ -31,7 +31,8 @@ import {
   seedAccountA,
   playAccountIdA,
   playAccountIdB,
-  FAKE_USERNAME
+  FAKE_USERNAME,
+  testNetworkPolicy
 } from "../../fixtures/playHarness.js";
 import { profileBody } from "../../fixtures/auth/fixtures.js";
 
@@ -76,7 +77,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);
@@ -87,7 +89,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
       trust: bundle.trust,
       artefactSource: source,
       antiRollbackStore: built.deps.antiRollbackStore,
-      antiRollbackState: built.deps.antiRollbackState
+      antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
     });
     assert.equal(st.status, "READY");
 
@@ -159,7 +162,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
 
@@ -224,7 +228,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle2.trust,
         artefactSource: source2,
         antiRollbackStore: built2.deps.antiRollbackStore,
-        antiRollbackState: built2.deps.antiRollbackState
+        antiRollbackState: built2.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     const idA2 = await seedAccountA(built2.accounts, built2.secure, { lastUsedAtMs: 42 });
@@ -285,7 +290,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);
@@ -298,7 +304,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
       trust: bundle.trust,
       artefactSource: source,
       antiRollbackStore: built.deps.antiRollbackStore,
-      antiRollbackState: built.deps.antiRollbackState
+      antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
     };
     await assert.rejects(
       () => updateInstance({ ...req, operation: "update", skipRuntimePrep: true }, orchDeps),
@@ -371,7 +378,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);
@@ -388,7 +396,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
             trust: bundle.trust,
             artefactSource: source,
             antiRollbackStore: built.deps.antiRollbackStore,
-            antiRollbackState: built.deps.antiRollbackState
+            antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
           }
         ),
       (e: unknown) => e instanceof LauncherError && e.code === ErrorCode.GAME_ALREADY_RUNNING
@@ -434,7 +443,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     await seedAccountA(built.accounts, built.secure);
@@ -492,7 +502,8 @@ describe("play orchestrator 0.5.0-beta.1", { concurrency: 1 }, () => {
         trust: bundle.trust,
         artefactSource: source,
         antiRollbackStore: built.deps.antiRollbackStore,
-        antiRollbackState: built.deps.antiRollbackState
+        antiRollbackState: built.deps.antiRollbackState,
+        ...testNetworkPolicy()
       }
     );
     const paths = new InstancePaths(env.instancePath);

@@ -9,6 +9,8 @@ import {
   defaultInstanceRoot,
   defaultRuntimeRoot,
   defaultSecureStoreRoot,
+  foreignSweetCraftRootsBesideProductUserData,
+  isUnderForeignSweetCraftRoot,
   LAUNCHER_DATA_DIR_NAME
 } from "./productData.js";
 
@@ -85,7 +87,7 @@ export function isInstanceVolumeAccessible(
 
 /**
  * Resolve the authoritative SweetCraft instance root.
- * Missing setting → legacy {launcher-data}/instances/sweetcraft.
+ * Missing setting → default {launcher-data}/instances/paxcraft.
  */
 export function resolveSweetCraftInstanceLocation(
   ctx: InstanceLocationContext
@@ -184,7 +186,8 @@ export type InstancePathValidationFailure =
   | "WINDOWS_SYSTEM"
   | "OVERLAP_SOURCE"
   | "OVERLAP_DESTINATION"
-  | "SAME_PATH";
+  | "SAME_PATH"
+  | "FOREIGN_SWEETCRAFT_DATA_ROOT";
 
 export interface InstancePathValidationResult {
   readonly ok: boolean;
@@ -220,6 +223,16 @@ export function validateInstancePathCandidate(
   }
   if (isWindowsSystemDirectory(canonical)) {
     return { ok: false, reason: "WINDOWS_SYSTEM" };
+  }
+
+  // PACK-PAX-04 — refuse instance paths under foreign SweetCraft APPDATA roots (incl. junctions).
+  // Roots are siblings of this product's userData (hermetic under injected test APPDATA).
+  if (
+    isUnderForeignSweetCraftRoot(canonical, {
+      foreignRoots: foreignSweetCraftRootsBesideProductUserData(guard.productUserDataRoot)
+    })
+  ) {
+    return { ok: false, reason: "FOREIGN_SWEETCRAFT_DATA_ROOT" };
   }
 
   const forbiddenExact: { path: string; reason: InstancePathValidationFailure }[] = [

@@ -1,5 +1,5 @@
 import {
-  SWEETCRAFT_SERVER_ADDRESS,
+  PAX_SERVER_ADDRESS_UNCONFIGURED,
   type InstallActiveOperation,
   type InstallProgressDto,
   type InstallRecoverability,
@@ -19,7 +19,7 @@ export function snapshotToStatusDto(
   const latest = snap.latestVersion ?? undefined;
   const raw: Record<string, unknown> = {
     readiness: snap.readiness,
-    serverAddress: SWEETCRAFT_SERVER_ADDRESS,
+    serverAddress: PAX_SERVER_ADDRESS_UNCONFIGURED,
     channel: snap.channel,
     recoverability: snap.recoverability,
     activeOperation: opts?.activeOperation ?? "IDLE"

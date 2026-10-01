@@ -67,6 +67,7 @@ type AuthModule = {
     packagedProduction?: boolean;
     liveFlag?: boolean;
   }) => void;
+  assertPaxLiveAuthNetworkAllowed: (opts?: { packagedProduction?: boolean }) => void;
   DefaultSystemBrowser: new () => { open(url: string): Promise<void> };
   FetchAuthHttpTransport: new () => unknown;
   signInInteractively: (deps: Record<string, unknown>) => Promise<{
@@ -150,6 +151,13 @@ export async function createRealAuthBackend(
       signal?: AbortSignal;
       onPhase?: (phase: AuthProgressPhase) => void;
     }): Promise<AuthBackendLoginResult> {
+      try {
+        auth.assertPaxLiveAuthNetworkAllowed(
+          opts.packagedProduction === true ? { packagedProduction: true } : undefined
+        );
+      } catch (e) {
+        throw mapAuthCodeToUiError(extractErrorCode(e));
+      }
       const launcherAuth = auth.resolveLauncherAuthConfig({ env: process.env });
       try {
         auth.assertLiveAuthEnabled({

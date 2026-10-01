@@ -11,7 +11,7 @@ const INITIAL: ServerStatusDto = {
   playersMax: null,
   versionLabel: null,
   checkedAt: '',
-  address: 'sweetcraft.datho.st',
+  address: 'not-configured',
 };
 
 /**

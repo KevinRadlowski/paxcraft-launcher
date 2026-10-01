@@ -19,11 +19,11 @@ interface NavItem {
     <aside class="sidebar" aria-label="Navigation principale">
       <div class="brand">
         <div class="logo-wrap" aria-hidden="true">
-          <img [src]="mark" width="44" height="44" alt="" />
+          <img [src]="mark" width="40" height="40" alt="" />
         </div>
         <div class="brand-text">
-          <span class="brand-name">SweetCraft</span>
-          <span class="brand-sub">LAUNCHER</span>
+          <span class="brand-name">{{ 'shell.product.name' | scTranslate }}</span>
+          <span class="brand-sub">{{ 'shell.product.by' | scTranslate }}</span>
         </div>
       </div>
 
@@ -47,16 +47,7 @@ interface NavItem {
       </nav>
 
       <div class="footer">
-        <div class="xnosweet-block" aria-label="XNOSWEET">
-          <!-- Official mark slot: only render <img> when a real brand file is provided.
-               Current text fallback avoids broken-image icons. -->
-          <p class="xnosweet-wordmark">XNOSWEET</p>
-          <ul class="xnosweet-meta" aria-hidden="true">
-            <li>GAMING</li>
-            <li>COMMUNITY</li>
-            <li>CREATIVE</li>
-          </ul>
-        </div>
+        <p class="community-sig">{{ 'shell.community.sig' | scTranslate }}</p>
         @if (version(); as v) {
           <p class="version">v{{ v }}</p>
         }
@@ -75,59 +66,57 @@ interface NavItem {
         height: 100%;
         display: flex;
         flex-direction: column;
-        gap: var(--sc-space-8);
-        padding: var(--sc-space-6) var(--sc-space-4);
-        background:
-          radial-gradient(ellipse 120% 42% at 50% -8%, rgba(217, 27, 181, 0.2), transparent 55%),
-          linear-gradient(180deg, rgba(18, 18, 28, 0.98) 0%, var(--sc-bg-sidebar) 100%);
-        border-right: 1px solid rgba(196, 181, 253, 0.12);
+        gap: var(--sc-space-6);
+        padding: var(--sc-space-5) var(--sc-space-3);
+        background: linear-gradient(180deg, #131c2b 0%, var(--sc-bg-sidebar) 100%);
+        border-right: 1px solid var(--sc-border-default);
       }
 
       .brand {
         display: flex;
         align-items: center;
         gap: var(--sc-space-3);
-        padding: 0.15rem var(--sc-space-2) 0.35rem;
+        padding: 0.1rem var(--sc-space-2) 0.25rem;
       }
 
       .logo-wrap {
         display: grid;
         place-items: center;
-        width: 3.1rem;
-        height: 3.1rem;
-        border-radius: var(--sc-radius-lg);
-        background:
-          radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.16), transparent 45%),
-          rgba(217, 27, 181, 0.14);
-        box-shadow:
-          0 0 28px rgba(217, 27, 181, 0.35),
-          inset 0 1px 0 rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(217, 27, 181, 0.42);
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: var(--sc-radius-md);
+        background: rgba(210, 167, 120, 0.1);
+        border: 1px solid rgba(210, 167, 120, 0.35);
+        overflow: hidden;
+        flex-shrink: 0;
       }
 
       .logo-wrap img {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        object-fit: contain;
       }
 
       .brand-text {
         display: flex;
         flex-direction: column;
         min-width: 0;
-        gap: 0.2rem;
+        gap: 0.15rem;
       }
 
       .brand-name {
         font-weight: var(--sc-weight-bold);
-        font-size: 1.12rem;
-        letter-spacing: -0.03em;
+        font-size: 1.05rem;
+        letter-spacing: -0.02em;
+        color: var(--sc-text-primary);
       }
 
       .brand-sub {
-        font-size: 0.7rem;
-        letter-spacing: 0.22em;
-        color: #c4b5fd;
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        color: var(--sc-text-accent);
         font-weight: var(--sc-weight-semibold);
+        text-transform: uppercase;
       }
 
       .nav {
@@ -141,24 +130,23 @@ interface NavItem {
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: var(--sc-space-2);
+        gap: var(--sc-space-1);
       }
 
       a {
         display: flex;
         align-items: center;
         gap: var(--sc-space-3);
-        padding: 0.85rem var(--sc-space-4);
+        padding: 0.7rem var(--sc-space-3);
         border-radius: var(--sc-radius-md);
         color: var(--sc-text-secondary);
         text-decoration: none;
         font-weight: var(--sc-weight-medium);
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         border: 1px solid transparent;
         transition:
           background var(--sc-duration-normal) var(--sc-ease-out),
           color var(--sc-duration-normal) var(--sc-ease-out),
-          box-shadow var(--sc-duration-normal) var(--sc-ease-out),
           border-color var(--sc-duration-normal) var(--sc-ease-out);
       }
 
@@ -172,56 +160,39 @@ interface NavItem {
         background: var(--sc-nav-active-gradient);
         color: var(--sc-text-primary);
         border-color: var(--sc-border-accent);
-        box-shadow: 0 0 26px rgba(217, 27, 181, 0.3);
+      }
+
+      a.active .icon {
+        color: var(--sc-text-accent);
       }
 
       .icon {
-        width: 1.2rem;
-        height: 1.2rem;
+        width: 1.15rem;
+        height: 1.15rem;
         flex-shrink: 0;
         opacity: 0.92;
       }
 
       .footer {
         margin-top: auto;
-        padding: var(--sc-space-4) var(--sc-space-2) 0;
-        border-top: 1px solid rgba(196, 181, 253, 0.12);
+        padding: var(--sc-space-3) var(--sc-space-2) 0;
+        border-top: 1px solid var(--sc-border-default);
         display: flex;
         flex-direction: column;
-        gap: var(--sc-space-3);
+        gap: var(--sc-space-2);
       }
 
-      .xnosweet-block {
-        display: flex;
-        flex-direction: column;
-        gap: 0.45rem;
-      }
-
-      .xnosweet-wordmark {
+      .community-sig {
         margin: 0;
-        font-size: 0.78rem;
-        font-weight: var(--sc-weight-bold);
-        letter-spacing: 0.18em;
-        color: #c4b5fd;
-        text-transform: uppercase;
-      }
-
-      .xnosweet-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        font-size: 0.62rem;
-        letter-spacing: 0.16em;
-        color: #9b8fb8;
-        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        color: var(--sc-text-muted);
+        line-height: 1.4;
       }
 
       .version {
         font-family: var(--sc-font-mono);
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         color: var(--sc-text-muted);
       }
     `,
@@ -231,7 +202,7 @@ export class SidebarComponent {
   private readonly store = inject(AppStore);
 
   readonly version = computed(() => this.store.info()?.version ?? null);
-  readonly mark = HOME_ASSETS.sweetcraftMark;
+  readonly mark = HOME_ASSETS.paxLogo;
 
   /** Real routes only — Installer/Jouer remain CTA actions, not screens. */
   readonly items: NavItem[] = [

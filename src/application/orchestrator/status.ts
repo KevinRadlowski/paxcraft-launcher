@@ -1,7 +1,7 @@
 import { ErrorCode, LauncherError } from "../../core/errors/index.js";
 import type { TrustedResolvedRelease } from "../../core/resolve/index.js";
 import { resolveLatestRelease } from "../../core/resolve/index.js";
-import { DEFAULT_PRODUCT_BASE } from "../../distribution/urls/index.js";
+import { tryResolveDistributionOrigin } from "../../product/paxNetworkConfig.js";
 import { InstancePaths } from "../../instance/layout/index.js";
 import {
   InstanceStateStore,
@@ -74,7 +74,11 @@ export async function inspectInstanceStatus(
   emitOperationProgress(emitter, phaseProgress(operationId, "status", "RESOLVING"));
 
   const paths = new InstancePaths(req.instancePath);
-  const productBase = req.productBase ?? DEFAULT_PRODUCT_BASE;
+  const productBase = tryResolveDistributionOrigin({
+    explicit: req.productBase,
+    harness: deps.networkHarness,
+    runtime: deps.networkRuntime
+  });
 
   const lock = await inspectInstanceLock(paths);
   if (!opts?.skipLockCheck) {
@@ -202,6 +206,41 @@ export async function inspectInstanceStatus(
       findings,
       lockPresent: lock.kind === "STALE",
       orphanTransaction: hasOrphanSignal
+    };
+  }
+
+  if (productBase === null) {
+    findings.push("DISTRIBUTION_NOT_CONFIGURED");
+    emitOperationProgress(emitter, phaseProgress(operationId, "status", "DONE"));
+    if (!isInstalledState(loaded.state)) {
+      findings.push("NO_INSTANCE_STATE");
+      return {
+        operationId,
+        operation: "status",
+        status: "NOT_INSTALLED",
+        channel: req.channel,
+        installedVersion: null,
+        installedSequence: null,
+        latestVersion: null,
+        latestSequence: null,
+        findings,
+        lockPresent: lock.kind === "STALE",
+        orphanTransaction: safeOrphans.length > 0
+      };
+    }
+    // Local-only: installed instance without remote tip — do not claim OFFLINE/UPDATE.
+    return {
+      operationId,
+      operation: "status",
+      status: "READY",
+      channel: req.channel,
+      installedVersion,
+      installedSequence,
+      latestVersion: null,
+      latestSequence: null,
+      findings,
+      lockPresent: lock.kind === "STALE",
+      orphanTransaction: safeOrphans.length > 0
     };
   }
 

@@ -1,17 +1,18 @@
-# SweetCraft Launcher — electron-builder
+# PaxCraft Launcher — electron-builder (PACK-PAX-04 Windows identity isolation)
 # PACK-01 foundation + PACK-02 extraResources + PACK-04 Windows identity.
 # buildVersion is synced by pnpm version:generate (Windows PE numeric mapping).
+# Copyright / PE CompanyName remain historical rights strings (not Authenticode).
 
 buildVersion: 0.6.0.18
 
-appId: fr.xbase.sweetcraft.launcher
-productName: SweetCraft Launcher
-executableName: SweetCraft Launcher
+appId: org.paxhorizon.paxcraft.launcher
+productName: PaxCraft Launcher
+executableName: PaxCraft Launcher
 copyright: Copyright © SweetCraft / XBase
 
 # Uses root package.json "description".
-# PE CompanyName comes from package.json author.name (PACK-12C product branding:
-# "SweetCraft / XBASE"). This is NOT Authenticode / verified-publisher identity.
+# PE CompanyName comes from package.json author.name (PACK-12C):
+# "SweetCraft / XBASE". This is NOT Authenticode / verified-publisher identity.
 # PE FileVersion/ProductVersion: package.json shortVersion + shortVersionWindows
 # (synced by version:generate) plus buildVersion above.
 
@@ -53,8 +54,8 @@ nsis:
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: SweetCraft Launcher
-  uninstallDisplayName: SweetCraft Launcher
+  shortcutName: PaxCraft Launcher
+  uninstallDisplayName: PaxCraft Launcher
   installerIcon: build/icon.ico
   uninstallerIcon: build/icon.ico
   installerHeaderIcon: build/icon.ico

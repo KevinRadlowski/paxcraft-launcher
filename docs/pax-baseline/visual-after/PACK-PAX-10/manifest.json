@@ -1,0 +1,105 @@
+{
+  "lot": "PACK-PAX-10",
+  "capturedAt": "2026-10-01T14:15:24.310Z",
+  "gitHead": "33499137b02a3057f3891b978a8b484f06d44c57",
+  "wipNote": "WIP PACK-PAX-03..10 present (uncommitted). Captures reflect PACK-PAX-10 diagnostics narrow + chooseLocation PaxCraft.",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "viewportNarrow": {
+    "width": 1100,
+    "height": 700
+  },
+  "deviceScaleFactor": 1,
+  "browser": {
+    "product": "Google Chrome (system, CDP headless)",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "headless": true
+  },
+  "gateway": "DevLauncherDesktopGateway (ng serve development, no preload)",
+  "rendererBase": "http://127.0.0.1:4202",
+  "fictionalValues": [
+    "Chemin instance Dev gateway = C:\\\\Dev\\\\PaxCraft (fictif)",
+    "chooseLocation Dev = D:\\\\Games\\\\PaxCraft (fictif)",
+    "États AUTHENTICATED / READY = fixtures Dev"
+  ],
+  "networkPolicy": {
+    "allow": [
+      "127.0.0.1",
+      "localhost",
+      "data:",
+      "blob:"
+    ],
+    "blockedExternalCount": 1,
+    "blockedExternalSamples": [
+      "https://example.com/"
+    ],
+    "mechanism": "CDP Fetch.failRequest for non-loopback"
+  },
+  "scenes": [
+    {
+      "id": "01-diagnostics-narrow",
+      "route": "/diagnostics",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "open-technical"
+      },
+      "note": "Diagnostics 1100×700 — cartes d’état densifiées",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "01-diagnostics-narrow.png",
+      "sha256": "4357f48009430b720ebe967c6706fef6da8add9c157a465980329211e4712f55",
+      "viewport": {
+        "width": 1100,
+        "height": 700
+      },
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "02-settings-choose-location",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": "settings-choose-location"
+      },
+      "note": "Paramètres après chooseLocation Dev → D:\\\\Games\\\\PaxCraft",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "02-settings-choose-location.png",
+      "sha256": "255a02e4cd989721d017b29fa63080c3a1525600898b5225713f5f44a276a7e4",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "blockedExternalHits": 0
+    },
+    {
+      "id": "03-settings-default-path",
+      "route": "/settings",
+      "fixture": {
+        "auth": "AUTHENTICATED",
+        "install": "READY",
+        "action": null
+      },
+      "note": "Paramètres chemin Dev par défaut C:\\\\Dev\\\\PaxCraft",
+      "status": "CAPTURED",
+      "reason": null,
+      "file": "03-settings-default-path.png",
+      "sha256": "35d09f543586b3ac5b5432476e6f901c1ac93380320f860549c5ad35955f07ea",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "blockedExternalHits": 0
+    }
+  ],
+  "limits": [
+    "Captures navigateur du renderer Angular — ne qualifient pas Electron ni chrome Windows.",
+    "Fixtures Dev gateway uniquement.",
+    "Préserver visual-after/PACK-PAX-07, 07.1, 08 et 09.",
+    "Aucun package npm ajouté; Chrome système + CDP natif Node."
+  ]
+}

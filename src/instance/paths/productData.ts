@@ -1,36 +1,51 @@
 /**
- * Canonical SweetCraft Launcher product data layout (PACK-03).
+ * Canonical PaxCraft Launcher product data layout (PACK-PAX-04).
  * Shared by CLI and Desktop — no Electron imports.
  *
  * Windows product userData (Electron / CLI):
- *   %APPDATA%\SweetCraft Launcher
+ *   %APPDATA%\PaxCraft Launcher
  * Launcher managed root:
- *   %APPDATA%\SweetCraft Launcher\launcher-data
+ *   %APPDATA%\PaxCraft Launcher\launcher-data
  * Default instance:
- *   …/launcher-data/instances/sweetcraft
+ *   …/launcher-data/instances/paxcraft
  *
- * Legacy CLI root (pre-PACK-03):
- *   %APPDATA%\SweetCraftLauncher  (was the data dir itself)
+ * Foreign SweetCraft roots (NEVER probed, migrated, or accepted as data/instance roots):
+ *   %APPDATA%\SweetCraft Launcher
+ *   %APPDATA%\SweetCraftLauncher
+ *
+ * Env override: PAXCRAFT_LAUNCHER_DATA_DIR only.
+ * SWEETCRAFT_LAUNCHER_DATA_DIR is intentionally ignored (no silent alias).
  */
 import fs from "node:fs";
 import path from "node:path";
 import { homedir as osHomedir } from "node:os";
 
-/** Electron productName / Windows AppData folder — keep in sync with desktop/shared/product.ts */
-export const PRODUCT_USER_DATA_DIR_NAME = "SweetCraft Launcher";
+/** Electron productName / Windows AppData folder — keep in sync with desktop/shared/product-data.ts */
+export const PRODUCT_USER_DATA_DIR_NAME = "PaxCraft Launcher";
 
 /** Managed application data under product userData. */
 export const LAUNCHER_DATA_DIR_NAME = "launcher-data";
 
-/** Canonical default instance id (was CLI "default", Desktop "sweetcraft"). */
-export const DEFAULT_INSTANCE_ID = "sweetcraft";
+/** Canonical default instance id. */
+export const DEFAULT_INSTANCE_ID = "paxcraft";
 
-/** Pre-PACK-03 CLI data directory name (flat APPDATA child = data root). */
-export const LEGACY_CLI_DATA_DIR_NAME = "SweetCraftLauncher";
+/**
+ * Historical SweetCraft folder names — foreign to Pax.
+ * Retained as constants so rejection/tests stay explicit. Never used as active data roots.
+ */
+export const FOREIGN_SWEETCRAFT_USER_DATA_DIR_NAME = "SweetCraft Launcher";
+export const FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME = "SweetCraftLauncher";
 
-export const ENV_LAUNCHER_DATA_DIR = "SWEETCRAFT_LAUNCHER_DATA_DIR";
+/** @deprecated PACK-PAX-04 — alias of FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME (not an active root). */
+export const LEGACY_CLI_DATA_DIR_NAME = FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME;
 
-export type LauncherDataRootSource = "explicit" | "env" | "canonical" | "legacy-fallback";
+/** Pax-only data-dir override. */
+export const ENV_LAUNCHER_DATA_DIR = "PAXCRAFT_LAUNCHER_DATA_DIR";
+
+/** Former SweetCraft env — must never alias into Pax resolution. */
+export const LEGACY_SWEETCRAFT_ENV_LAUNCHER_DATA_DIR = "SWEETCRAFT_LAUNCHER_DATA_DIR";
+
+export type LauncherDataRootSource = "explicit" | "env" | "canonical";
 
 export interface ProductDataPathOptions {
   readonly platform?: NodeJS.Platform;
@@ -38,26 +53,36 @@ export interface ProductDataPathOptions {
   readonly homedir?: string;
   /**
    * Electron app.getPath("userData") when available.
-   * Must already be the product userData root (…/SweetCraft Launcher).
+   * Must already be the Pax product userData root (…/PaxCraft Launcher).
    */
   readonly electronUserData?: string;
-  /** Explicit override (CLI --data-dir). Highest precedence after validation. */
+  /** Explicit override (CLI --data-dir). Highest precedence after foreign-root validation. */
   readonly explicitDataDir?: string;
   /**
-   * When true (default), allow reading/writing legacy CLI root if canonical is empty
-   * and legacy has product markers. Never deletes legacy.
+   * @deprecated PACK-PAX-04 — ignored. Legacy SweetCraft fallback/migration removed.
    */
   readonly allowLegacyFallback?: boolean;
   /** Injected FS for tests. */
   readonly existsSync?: (p: string) => boolean;
+  /** Injected realpath for junction tests. */
+  readonly realpathSync?: (p: string) => string;
 }
 
 export interface ResolvedLauncherDataRoot {
   readonly dataDir: string;
   readonly productUserDataRoot: string;
   readonly source: LauncherDataRootSource;
-  readonly legacyDataDir: string | null;
+  /** Always null under Pax isolation (no SweetCraft legacy root in active resolution). */
+  readonly legacyDataDir: null;
   readonly canonicalDataDir: string;
+}
+
+export class ForeignSweetCraftDataPathError extends Error {
+  readonly code = "FOREIGN_SWEETCRAFT_DATA_PATH" as const;
+  constructor(message: string) {
+    super(message);
+    this.name = "ForeignSweetCraftDataPathError";
+  }
 }
 
 function platformOf(opts?: ProductDataPathOptions): NodeJS.Platform {
@@ -81,22 +106,101 @@ function exists(opts: ProductDataPathOptions | undefined, p: string): boolean {
   }
 }
 
-/** Product-level userData root (Electron userData equivalent). */
-export function resolveProductUserDataRoot(opts?: ProductDataPathOptions): string {
-  if (opts?.electronUserData?.trim()) {
-    return path.resolve(opts.electronUserData.trim());
-  }
+function appDataRoot(opts?: ProductDataPathOptions): string {
   const home = homeOf(opts);
   const plat = platformOf(opts);
   const env = envOf(opts);
   if (plat === "win32") {
-    const appData = env.APPDATA ?? path.join(home, "AppData", "Roaming");
-    return path.join(appData, PRODUCT_USER_DATA_DIR_NAME);
+    return env.APPDATA ?? path.join(home, "AppData", "Roaming");
   }
   if (plat === "darwin") {
-    return path.join(home, "Library", "Application Support", PRODUCT_USER_DATA_DIR_NAME);
+    return path.join(home, "Library", "Application Support");
   }
-  return path.join(home, ".local", "share", PRODUCT_USER_DATA_DIR_NAME);
+  return path.join(home, ".local", "share");
+}
+
+/** Absolute foreign SweetCraft roots for the given options (product + legacy flat). */
+export function resolveForeignSweetCraftRoots(opts?: ProductDataPathOptions): readonly string[] {
+  const base = appDataRoot(opts);
+  return [
+    path.resolve(path.join(base, FOREIGN_SWEETCRAFT_USER_DATA_DIR_NAME)),
+    path.resolve(path.join(base, FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME))
+  ];
+}
+
+function tryRealpath(opts: ProductDataPathOptions | undefined, p: string): string {
+  const resolved = path.resolve(p);
+  const rp = opts?.realpathSync ?? fs.realpathSync;
+  try {
+    return path.resolve(rp(resolved));
+  } catch {
+    // Path may not exist yet — compare on lexical resolve only.
+    return resolved;
+  }
+}
+
+function isPathInsideOrEqual(candidate: string, root: string): boolean {
+  const c = path.resolve(candidate);
+  const r = path.resolve(root);
+  if (c === r) return true;
+  const prefix = r.endsWith(path.sep) ? r : r + path.sep;
+  return c.startsWith(prefix);
+}
+
+/**
+ * True when candidate is inside a foreign SweetCraft root (lexical + realpath when possible).
+ * When `foreignRoots` is omitted, roots are derived from opts APPDATA (resolveForeignSweetCraftRoots).
+ */
+export function isUnderForeignSweetCraftRoot(
+  candidate: string,
+  opts?: ProductDataPathOptions & { readonly foreignRoots?: readonly string[] }
+): boolean {
+  const lexical = path.resolve(candidate);
+  const real = tryRealpath(opts, candidate);
+  const roots = opts?.foreignRoots ?? resolveForeignSweetCraftRoots(opts);
+  for (const foreign of roots) {
+    const foreignReal = tryRealpath(opts, foreign);
+    if (isPathInsideOrEqual(lexical, foreign) || isPathInsideOrEqual(real, foreign)) {
+      return true;
+    }
+    if (isPathInsideOrEqual(lexical, foreignReal) || isPathInsideOrEqual(real, foreignReal)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Foreign SweetCraft roots sibling to a Pax product userData directory. */
+export function foreignSweetCraftRootsBesideProductUserData(
+  productUserDataRoot: string
+): readonly string[] {
+  const appData = path.dirname(path.resolve(productUserDataRoot));
+  return [
+    path.resolve(path.join(appData, FOREIGN_SWEETCRAFT_USER_DATA_DIR_NAME)),
+    path.resolve(path.join(appData, FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME))
+  ];
+}
+
+/** Throws ForeignSweetCraftDataPathError when candidate targets SweetCraft data roots. */
+export function assertNotForeignSweetCraftDataPath(
+  candidate: string,
+  opts?: ProductDataPathOptions
+): void {
+  if (isUnderForeignSweetCraftRoot(candidate, opts)) {
+    throw new ForeignSweetCraftDataPathError(
+      "path targets foreign SweetCraft launcher data roots (refused)"
+    );
+  }
+}
+
+/** Product-level userData root (Electron userData equivalent). */
+export function resolveProductUserDataRoot(opts?: ProductDataPathOptions): string {
+  if (opts?.electronUserData?.trim()) {
+    const root = path.resolve(opts.electronUserData.trim());
+    assertNotForeignSweetCraftDataPath(root, opts);
+    return root;
+  }
+  return path.join(appDataRoot(opts), PRODUCT_USER_DATA_DIR_NAME);
 }
 
 /** Canonical managed data root: {productUserData}/launcher-data */
@@ -104,19 +208,12 @@ export function resolveCanonicalLauncherDataDir(opts?: ProductDataPathOptions): 
   return path.join(resolveProductUserDataRoot(opts), LAUNCHER_DATA_DIR_NAME);
 }
 
-/** Legacy CLI data root (was itself the data dir). */
+/**
+ * @deprecated PACK-PAX-04 — returns foreign SweetCraft legacy path for rejection tests only.
+ * Never used as an active launcher data root.
+ */
 export function resolveLegacyLauncherDataDir(opts?: ProductDataPathOptions): string {
-  const home = homeOf(opts);
-  const plat = platformOf(opts);
-  const env = envOf(opts);
-  if (plat === "win32") {
-    const appData = env.APPDATA ?? path.join(home, "AppData", "Roaming");
-    return path.join(appData, LEGACY_CLI_DATA_DIR_NAME);
-  }
-  if (plat === "darwin") {
-    return path.join(home, "Library", "Application Support", LEGACY_CLI_DATA_DIR_NAME);
-  }
-  return path.join(home, ".local", "share", LEGACY_CLI_DATA_DIR_NAME);
+  return path.join(appDataRoot(opts), FOREIGN_SWEETCRAFT_LEGACY_CLI_DIR_NAME);
 }
 
 /**
@@ -139,11 +236,7 @@ export function launcherDataDirHasProductMarkers(
 }
 
 /**
- * Soft migration: copy missing top-level entries from legacy → canonical.
- * - Never deletes legacy
- * - Never overwrites existing destination files/dirs
- * - No-op if destination already has product markers
- * - No-op if legacy empty
+ * @deprecated PACK-PAX-04 — no-op. Soft migration from SweetCraft roots is permanently disabled.
  */
 export function migrateLegacyLauncherDataIfNeeded(
   opts?: ProductDataPathOptions
@@ -155,105 +248,58 @@ export function migrateLegacyLauncherDataIfNeeded(
 } {
   const canonical = resolveCanonicalLauncherDataDir(opts);
   const legacy = resolveLegacyLauncherDataDir(opts);
-  const copied: string[] = [];
-
-  if (launcherDataDirHasProductMarkers(canonical, opts)) {
-    return { migrated: false, canonicalDataDir: canonical, legacyDataDir: legacy, copiedEntries: copied };
-  }
-  if (!launcherDataDirHasProductMarkers(legacy, opts)) {
-    return { migrated: false, canonicalDataDir: canonical, legacyDataDir: legacy, copiedEntries: copied };
-  }
-
-  // Use real fs for migration (tests can pre-seed dirs).
-  fs.mkdirSync(canonical, { recursive: true });
-  const entries = ["state", "secure", "instances", "runtime", "settings.json"];
-  for (const name of entries) {
-    const from = path.join(legacy, name);
-    const to = path.join(canonical, name);
-    if (!fs.existsSync(from)) continue;
-    if (fs.existsSync(to)) continue;
-    const st = fs.statSync(from);
-    if (st.isDirectory()) {
-      fs.cpSync(from, to, { recursive: true, force: false });
-      copied.push(name);
-    } else if (st.isFile()) {
-      fs.copyFileSync(from, to);
-      copied.push(name);
-    }
-  }
   return {
-    migrated: copied.length > 0,
+    migrated: false,
     canonicalDataDir: canonical,
     legacyDataDir: legacy,
-    copiedEntries: copied
+    copiedEntries: []
   };
 }
 
 /**
- * Resolve the active launcher data root.
- * Precedence: explicit → env → canonical (after optional soft migration) → legacy fallback.
+ * Resolve the active Pax launcher data root.
+ * Precedence: explicit → PAXCRAFT_LAUNCHER_DATA_DIR → canonical.
+ * Never migrates or falls back to SweetCraft roots. Never reads SWEETCRAFT_LAUNCHER_DATA_DIR.
  */
 export function resolveLauncherDataRoot(opts?: ProductDataPathOptions): ResolvedLauncherDataRoot {
   const productUserDataRoot = resolveProductUserDataRoot(opts);
   const canonicalDataDir = resolveCanonicalLauncherDataDir(opts);
-  const legacyDataDir = resolveLegacyLauncherDataDir(opts);
-  const allowLegacy = opts?.allowLegacyFallback !== false;
 
   const explicit = opts?.explicitDataDir?.trim();
   if (explicit) {
+    const dataDir = path.resolve(explicit);
+    assertNotForeignSweetCraftDataPath(dataDir, opts);
     return {
-      dataDir: path.resolve(explicit),
+      dataDir,
       productUserDataRoot,
       source: "explicit",
-      legacyDataDir,
+      legacyDataDir: null,
       canonicalDataDir
     };
   }
 
-  const envDir = envOf(opts)[ENV_LAUNCHER_DATA_DIR]?.trim();
+  const env = envOf(opts);
+  const envDir = env[ENV_LAUNCHER_DATA_DIR]?.trim();
   if (envDir) {
+    const dataDir = path.resolve(envDir);
+    assertNotForeignSweetCraftDataPath(dataDir, opts);
     return {
-      dataDir: path.resolve(envDir),
+      dataDir,
       productUserDataRoot,
       source: "env",
-      legacyDataDir,
+      legacyDataDir: null,
       canonicalDataDir
     };
   }
 
-  // Soft migrate legacy → canonical when safe.
-  try {
-    migrateLegacyLauncherDataIfNeeded(opts);
-  } catch {
-    // Migration failure must not crash path resolution — fall through.
-  }
+  // Intentionally ignore LEGACY_SWEETCRAFT_ENV_LAUNCHER_DATA_DIR.
+  // Intentionally do not call migrateLegacyLauncherDataIfNeeded / legacy-fallback.
 
-  if (launcherDataDirHasProductMarkers(canonicalDataDir, opts) || !allowLegacy) {
-    return {
-      dataDir: canonicalDataDir,
-      productUserDataRoot,
-      source: "canonical",
-      legacyDataDir,
-      canonicalDataDir
-    };
-  }
-
-  if (allowLegacy && launcherDataDirHasProductMarkers(legacyDataDir, opts)) {
-    return {
-      dataDir: legacyDataDir,
-      productUserDataRoot,
-      source: "legacy-fallback",
-      legacyDataDir,
-      canonicalDataDir
-    };
-  }
-
-  // Fresh install — prefer canonical even if empty.
   return {
     dataDir: canonicalDataDir,
     productUserDataRoot,
     source: "canonical",
-    legacyDataDir,
+    legacyDataDir: null,
     canonicalDataDir
   };
 }

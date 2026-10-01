@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Safe diagnostics builder + clipboard format (0.6E).
  */
 
@@ -16,7 +16,7 @@ describe("0.6E safe diagnostics", () => {
   const base = () =>
     buildSafeDiagnostics({
       info: {
-        name: "SweetCraft Launcher",
+        name: "PaxCraft Launcher",
         version: "0.6.0-rc.4",
         platform: "win32",
         environment: "development",
@@ -63,7 +63,7 @@ describe("0.6E safe diagnostics", () => {
   it("omits build provenance when AppInfo lacks it", () => {
     const dto = buildSafeDiagnostics({
       info: {
-        name: "SweetCraft Launcher",
+        name: "PaxCraft Launcher",
         version: "0.6.0-rc.4",
         platform: "win32",
         environment: "development"
@@ -84,7 +84,7 @@ describe("0.6E safe diagnostics", () => {
   it("rejects path-like buildId / non-hex buildCommit", () => {
     const dto = buildSafeDiagnostics({
       info: {
-        name: "SweetCraft Launcher",
+        name: "PaxCraft Launcher",
         version: "0.6.0-rc.4",
         platform: "win32",
         environment: "development",
@@ -119,7 +119,7 @@ describe("0.6E safe diagnostics", () => {
 
   it("clipboard text has build identity and no tokens / paths / cmdline", () => {
     const text = formatDiagnosticsClipboardText(base());
-    assert.match(text, /SweetCraft Launcher 0\.6\.0-rc\.4/);
+    assert.match(text, /PaxCraft Launcher 0\.6\.0-rc\.4/);
     assert.match(text, /Build ID: 0\.6\.0-rc\.4@abcdef123456/);
     assert.match(text, /Build commit: abcdef1234567890abcdef1234567890abcdef12/);
     assert.match(text, /Instance location: default/);
@@ -171,7 +171,7 @@ describe("0.6E safe diagnostics", () => {
   it("marks fake harness development-only in clipboard", () => {
     const prod = buildSafeDiagnostics({
       info: {
-        name: "SweetCraft Launcher",
+        name: "PaxCraft Launcher",
         version: "0.6.0-rc.4",
         platform: "win32",
         environment: "production"

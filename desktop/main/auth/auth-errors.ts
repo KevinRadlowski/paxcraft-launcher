@@ -36,6 +36,10 @@ export function mapAuthCodeToUiError(code: string): UiError {
       return toUiError(code, "error.auth_error");
     case "LIVE_AUTH_NOT_ENABLED":
       return toUiError(code, "error.auth_live_disabled");
+    case "NETWORK_NOT_CONFIGURED":
+    case "DISTRIBUTION_NOT_CONFIGURED":
+    case "HISTORICAL_DESTINATION_BLOCKED":
+      return toUiError(code, "error.network");
     case "MICROSOFT_CLIENT_ID_MISSING":
       return toUiError(code, "error.auth_error");
     default:

@@ -11,6 +11,7 @@ import type { OrchestratorDependencies } from "../src/application/orchestrator/t
 import { ProgressEmitter } from "../src/instance/events/index.js";
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { createNetworkHarnessPermit } from "../src/product/paxNetworkTestHooks.js";
 
 export type OrchKeyMaterial = ReturnType<typeof createTestKeyMaterial>;
 
@@ -170,7 +171,19 @@ export async function createOrchDeps(opts: {
     artefactSource: opts.source,
     antiRollbackStore,
     antiRollbackState,
+    ...testNetworkPolicy(),
     ...(opts.emitter ? { emitter: opts.emitter } : {})
+  };
+}
+
+/** Spread into inline OrchestratorDependencies / PlayDependencies in tests. */
+export function testNetworkPolicy(): {
+  networkHarness: ReturnType<typeof createNetworkHarnessPermit>;
+  networkRuntime: { kind: "test-harness" };
+} {
+  return {
+    networkHarness: createNetworkHarnessPermit(),
+    networkRuntime: { kind: "test-harness" }
   };
 }
 
